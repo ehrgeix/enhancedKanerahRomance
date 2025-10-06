@@ -1,0 +1,442 @@
+﻿using enhancedKanerahRomance.modStructure;
+using Kingmaker.AreaLogic.Cutscenes.Commands;
+using Kingmaker.Blueprints;
+using Kingmaker.Designers.EventConditionActionSystem.Actions;
+using Kingmaker.DialogSystem.Blueprints;
+using Kingmaker.ElementsSystem;
+using Kingmaker.EntitySystem.Stats;
+using Kingmaker.Enums;
+using Kingmaker.UnitLogic.Alignments;
+using System.Collections.Generic;
+using UnityEngine;
+using static enhancedKanerahRomance.modContent.AssetIds;
+using static enhancedKanerahRomance.modStructure.DialogueBlueprintBuilder;
+using static enhancedKanerahRomance.modStructure.DialogueHelpers;
+using static enhancedKanerahRomance.modStructure.MiscBlueprintBuilder;
+using static enhancedKanerahRomance.modStructure.RegistrationHelpers;
+
+namespace enhancedKanerahRomance.modContent
+{
+    internal class TestCases
+    {
+        public static void AddTestCases()
+        {
+
+            // BLOCK OF VARIABLES FOR CUE USE
+            var speakerKanerah = DialogueHelpers.SpeakerHandling.Create(
+                blueprint: ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(AssetIds.kanerahPortrait),
+                moveCamera: true,
+                checkDistance: true,
+                noSpeaker: false,
+                switchDual: false,
+                speakerPortrait: null
+                );
+
+                var speakerKanerah2 = DialogueHelpers.SpeakerHandling.Create(
+                blueprint: ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(AssetIds.kanerahPortrait),
+                moveCamera: true,
+                checkDistance: true,
+                noSpeaker: false,
+                switchDual: true,
+                speakerPortrait: null
+                );
+
+                var speakerKanerah3 = DialogueHelpers.SpeakerHandling.Create(
+                blueprint: null,
+                moveCamera: true,
+                checkDistance: true,
+                noSpeaker: false,
+                switchDual: false,
+                speakerPortrait: null
+                );
+
+
+            // END BLOCK OF VARIABLES FOR CUE USE
+
+            // create cue test 1 -- to fork from existing answerslist (via answer 1) into a new answerslist containing cue 2/3/4
+            var newCueTestCase1 = DialogueBlueprintBuilder.CreateOrModifyCue(
+                name: "newCueTestCase1",
+                text: "NEW CUE - TEST CASE 1. Transitions to new AnswersList",
+                assetId: AssetIds.newCueTestCase1,
+                mode: SetupMode.Create,
+                configure: c =>
+                {
+                    c.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswerTestCase1); // CreateCue requires this
+                    c.Speaker = speakerKanerah;
+                    // c.TurnSpeaker = true;
+                    c.Continue = DialogueHelpers.CueSelectionHandling.Default(); // create needed if cue continues to another, default does NOT continue
+                    // c.Continue = DialogueHelpers.CueSelectionHandling.Create(
+                    // new[] { "AssetIds.newcue..." } );
+                    // c.Conditions = ConditionHandling.Default();
+                    // c.OnShow = DialogueHelpers.ActionListHandling.Default();
+                    // c.OnStop = DialogueHelpers.ActionListHandling.Default();
+                    // c.AlignmentShift = DialogueHelpers.AlignmentShiftHandling.Default();
+                    c.Answers = DialogueHelpers.CueAnswersHandling.Create(AssetIds.newAnswersListTestCase1); // create needed if actionlist, default does NOT return answerslist
+                }
+            );
+
+            // create cue test 2
+            var newCueTestCase2 = DialogueBlueprintBuilder.CreateOrModifyCue(
+                name: "newCueTestCase2",
+                text: "NEW CUE - TEST CASE 2. Turnspeaker = true",
+                assetId: AssetIds.newCueTestCase2,
+                mode: SetupMode.Create,
+                configure: c =>
+                {
+                    c.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswerTestCase2);
+                    c.Speaker = speakerKanerah2;
+                    c.TurnSpeaker = true;
+                    c.Continue = DialogueHelpers.CueSelectionHandling.Default();
+                }
+            );
+
+            // create cue test 3
+            var newCueTestCase3 = DialogueBlueprintBuilder.CreateOrModifyCue(
+                name: "newCueTestCase3",
+                text: "NEW CUE - TEST CASE 3. Speaker has a null blueprint, so portrait is potentially different?",
+                assetId: AssetIds.newCueTestCase3,
+                mode: SetupMode.Create,
+                configure: c =>
+                {
+                    c.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswerTestCase3);
+                    c.Speaker = speakerKanerah3;
+                    c.Continue = DialogueHelpers.CueSelectionHandling.Default();
+                }
+            );
+
+            // create cue test 4
+            var newCueTestCase4 = DialogueBlueprintBuilder.CreateOrModifyCue(
+                name: "newCueTestCase4",
+                text: "NEW CUE - TEST CASE 4. Transitions to cue 5",
+                assetId: AssetIds.newCueTestCase4,
+                mode: SetupMode.Create,
+                configure: c =>
+                {
+                    c.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswerTestCase4);
+                    c.Speaker = speakerKanerah;
+                     c.Continue = DialogueHelpers.CueSelectionHandling.Create(
+                     new[] { AssetIds.newCueTestCase5 } );
+                }
+            );
+
+            // create cue test 5
+            var newCueTestCase5 = DialogueBlueprintBuilder.CreateOrModifyCue(
+                name: "newCueTestCase5",
+                text: "NEW CUE - TEST CASE 5. Null speaker test",
+                assetId: AssetIds.newCueTestCase5,
+                mode: SetupMode.Create,
+                configure: c =>
+                {
+                    c.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newCueTestCase4);
+                    c.Speaker = null; // TODO check
+                    c.Continue = DialogueHelpers.CueSelectionHandling.Default();
+                }
+            );
+
+            // create cue test 6 - success
+            var newCueTestCase6 = DialogueBlueprintBuilder.CreateOrModifyCue(
+                name: "newCueTestCase6",
+                text: "NEW CUE - TEST CASE 6. Shown on success",
+                assetId: AssetIds.newCueTestCase6Success,
+                mode: SetupMode.Create,
+                configure: c =>
+                {
+                    c.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newCheckTestCase1);
+                    c.Speaker = speakerKanerah;
+                    c.Continue = DialogueHelpers.CueSelectionHandling.Default();
+                }
+            );
+
+            // create cue test 7 - fail
+            var newCueTestCase7 = DialogueBlueprintBuilder.CreateOrModifyCue(
+                name: "newCueTestCase7",
+                text: "NEW CUE - TEST CASE 7. Shown on fail",
+                assetId: AssetIds.newCueTestCase7Fail,
+                mode: SetupMode.Create,
+                configure: c =>
+                {
+                    c.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newCheckTestCase1);
+                    c.Speaker = speakerKanerah;
+                    c.Continue = DialogueHelpers.CueSelectionHandling.Default();
+                }
+            );
+
+
+            // create check test 1
+            // this replaces a nextcue, so it has a parentasset of answer. but you never actually "see" it, it just sends you to either successcue or failcue depending if you pass or fail the check
+            var newCheckTestCase1 = DialogueBlueprintBuilder.CreateCheck(
+                name: "newCheckTestCase1",
+                assetId: AssetIds.newCheckTestCase1,
+                successId: AssetIds.newCueTestCase6Success,
+                failId: AssetIds.newCueTestCase7Fail,
+                configure: check =>
+                {
+                    check.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswerTestCase6);
+                    check.Type = StatType.SkillPersuasion;
+                    check.DC = 55;
+                }
+
+                );
+
+            // BLOCK OF VARIABLES FOR ANSWER USE
+
+            // create/register flags
+            var newTestCounterFlag = MiscBlueprintBuilder.CreateBlueprintUnlockableFlag(AssetIds.newTestCounterFlag);
+            var newTestUnlockedFlag = MiscBlueprintBuilder.CreateBlueprintUnlockableFlag(AssetIds.newTestUnlockedFlag);
+
+            // example stat check (persuasion), to use in createAnswer
+            // this doesn't work for what I wanted, this is a check to SHOW THE ANSWER - usage: a.ShowCheck = persuasionCheckExample;
+            // used in book events only I think
+            var persuasionCheckExample = ShowCheckHandling.Create(StatType.SkillPersuasion, 55);
+
+            // example alignment shift variable test, to use in createAnswer
+            var lawfulShiftExample = AlignmentShiftHandling.Create(
+            AlignmentShiftDirection.Lawful,
+            2,
+            AssetIds.newLawfulShiftTestCase, // guid
+            "MOD TEST: This choice makes you more lawful." // answer text
+            );
+
+            // END BLOCK OF VARIABLES FOR ANSWER USE
+
+            // create answer 1 - to be added to an existing answerslist but lead to new cue -> answerslist
+            var newAnswerTestCase1 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
+                name: "newAnswerTestCase1", // name
+                text: "NEW TEST ANSWER TEST CASE 1. Flows from existing answersList to new cue to new answerslist. Makes you more lawful (but does not require lawful).", // text
+                assetId: AssetIds.newAnswerTestCase1,
+                mode: SetupMode.Create,
+                configure: a =>
+                {
+                    a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
+                    new[] { AssetIds.newCueTestCase1 }
+                    ); // THIS INPUT IS ALWAYS NEEDED FOR ANSWER CREATION (but not modification)
+
+                    // a.ShowOnce = false;
+                    // a.ShowOnceCurrentDialog = false;
+                    // a.CharacterSelection = DialogueHelpers.CharacterSelectionHandling.Default();
+                    // a.ShowCheck = DialogueHelpers.ShowCheckHandling.Default();
+                    // a.ShowConditions = DialogueHelpers.ConditionHandling.Default();
+                    // a.SelectConditions = DialogueHelpers.ConditionHandling.Default();
+                    // a.OnSelect = DialogueHelpers.ActionListHandling.Default();
+                    // a.AlignmentShift = DialogueHelpers.AlignmentShiftHandling.Default();
+                    a.AlignmentShift = lawfulShiftExample;
+                    a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.aLWantToTalkToYouAboutWhatItMeansToBeATiefling);
+                    // a.AlignmentRequirement = AlignmentComponent.None;
+                }
+            );
+
+            // create answer 2
+            var newAnswerTestCase2 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
+                name: "newAnswerTestCase2", // name
+                text: "NEW TEST ANSWER TEST CASE 2. ShowOnce = true", // text
+                assetId: AssetIds.newAnswerTestCase2,
+                mode: SetupMode.Create,
+                configure: a =>
+                {
+                    a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
+                    new[] { AssetIds.newCueTestCase2 }
+                    ); // THIS INPUT IS ALWAYS NEEDED FOR ANSWER CREATION (but not modification)
+
+                    a.ShowOnce = true;
+                    a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
+                }
+            );
+
+            // create answer 3
+            var newAnswerTestCase3 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
+                name: "newAnswerTestCase3", // name
+                text: "NEW TEST ANSWER TEST CASE 3. ShowOnceCurrentDialogue = true", // text
+                assetId: AssetIds.newAnswerTestCase3,
+                mode: SetupMode.Create,
+                configure: a =>
+                {
+                    a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
+                    new[] { AssetIds.newCueTestCase3 }
+                    ); // THIS INPUT IS ALWAYS NEEDED FOR ANSWER CREATION (but not modification)
+
+                    a.ShowOnceCurrentDialog = true;
+                    a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
+                }
+            );
+
+            // create answer 4
+            var newAnswerTestCase4 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
+                name: "newAnswerTestCase4", // name
+                text: "NEW TEST ANSWER TEST CASE 4. Leads to cue4 -> cue5", // text
+                assetId: AssetIds.newAnswerTestCase4,
+                mode: SetupMode.Create,
+                configure: a =>
+                {
+                    a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
+                    new[] { AssetIds.newCueTestCase4,
+                            AssetIds.newCueTestCase5}
+                    );
+                    a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
+                }
+            );
+
+            // create answer 5
+            var newAnswerTestCase5 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
+                name: "newAnswerTestCase5", // name
+                text: "NEW TEST ANSWER TEST CASE 5. REQUIRES lawful ", // text
+                assetId: AssetIds.newAnswerTestCase5,
+                mode: SetupMode.Create,
+                configure: a =>
+                {
+                    a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
+                    new[] { AssetIds.newCueTestCase2 }
+                    ); // THIS INPUT IS ALWAYS NEEDED FOR ANSWER CREATION (but not modification)
+
+                    a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
+                    a.AlignmentRequirement = AlignmentComponent.Lawful;
+                }
+            );
+
+            // create answer 6
+            var newAnswerTestCase6 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
+                name: "newAnswerTestCase6",
+                text: "NEW TEST ANSWER TEST CASE 6. Persuasion check set by the nextCue (which is actually a blueprintCheck not blueprintCue)",
+                assetId: AssetIds.newAnswerTestCase6,
+                mode: SetupMode.Create,
+                configure: a =>
+                {
+                    a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
+                    new[] { AssetIds.newCheckTestCase1 }
+                    );
+                    a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
+                }
+            );
+
+            // create answer 7
+            var newAnswerTestCase7 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
+                name: "newAnswerTestCase7",
+                text: "NEW TEST ANSWER TEST CASE 7. Unlocks flag with flagset helper, flag has to be created in separate variable earlier",
+                assetId: AssetIds.newAnswerTestCase7,
+                mode: SetupMode.Create,
+                configure: a =>
+                {
+                    a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
+                    new[] { AssetIds.newCueTestCase2 }
+                    );
+
+                    a.OnSelect = DialogueHelpers.ActionListHandling.FlagSet(AssetIds.newTestUnlockedFlag, 1);
+                    a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
+                }
+            );
+
+            // create answer 8
+            var newAnswerTestCase8 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
+                name: "newAnswerTestCase8",
+                text: "NEW TEST ANSWER TEST CASE 8. Should only show if flag unlocked",
+                assetId: AssetIds.newAnswerTestCase8,
+                mode: SetupMode.Create,
+                configure: a =>
+                {
+                    a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
+                    new[] { AssetIds.newCueTestCase2 }
+                    );
+                    a.ShowConditions = DialogueHelpers.ConditionHandling.FlagUnlocked(AssetIds.newTestUnlockedFlag);
+                    a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
+                }
+            );
+
+            // create answer 9
+            var newAnswerTestCase9 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
+                name: "newAnswerTestCase9",
+                text: "NEW TEST ANSWER TEST CASE 9. Increments a flag",
+                assetId: AssetIds.newAnswerTestCase9,
+                mode: SetupMode.Create,
+                configure: a =>
+                {
+                    a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
+                    new[] { AssetIds.newCueTestCase2 }
+                    );
+                    a.OnSelect = DialogueHelpers.ActionListHandling.FlagIncrement(AssetIds.newTestCounterFlag, 1);
+                    a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
+                }
+            );
+
+            // create answer 10
+            var newAnswerTestCase10 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
+                name: "newAnswerTestCase10",
+                text: "NEW TEST ANSWER TEST CASE 10. Only shows when flag has been incremented twice or more",
+                assetId: AssetIds.newAnswerTestCase10,
+                mode: SetupMode.Create,
+                configure: a =>
+                {
+                    a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
+                    new[] { AssetIds.newCueTestCase2 }
+                    );
+                    a.ShowConditions = DialogueHelpers.ConditionHandling.FlagValue(
+                        flagGuid: AssetIds.newTestCounterFlag,
+                        value: 2,
+                        comparison: ">="
+                    );
+                    a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
+                }
+            );
+
+
+            // create AnswersList
+            var newAnswersListTestBasic = DialogueBlueprintBuilder.CreateOrModifyAnswersList(
+                name: "newAnswersListTestCase1",
+                assetId: AssetIds.newAnswersListTestCase1,
+                mode: SetupMode.Create,
+                configure: al =>
+                {
+                    al.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newCueTestCase1);
+                    al.Answers.Add(newAnswerTestCase2);
+                    al.Answers.Add(newAnswerTestCase3);
+                    al.Answers.Add(newAnswerTestCase4);
+                    al.Answers.Add(newAnswerTestCase5);
+                    al.Answers.Add(newAnswerTestCase6);
+                    al.Answers.Add(newAnswerTestCase7);
+                    al.Answers.Add(newAnswerTestCase8);
+                    al.Answers.Add(newAnswerTestCase9);
+                    al.Answers.Add(newAnswerTestCase10);
+                }
+            );
+
+
+            // modify cue 1
+            var modifyCueTestCase1 = DialogueBlueprintBuilder.CreateOrModifyCue(
+                name: "modifyCueTestCase1",
+                text: "MODIFY CUE - TEST CASE 1. Formerly response to \"want you to leave my lands\"",
+                assetId: AssetIds.modifyWantYouToLeaveMyLandsCue,
+                mode: SetupMode.Modify,
+                configure: c =>
+                {
+                    // we are not modifying anything except text, so no changes here
+                }
+            );
+
+            // modify answer 1
+            var modifyAnswerTestCase1 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
+                name: "modifyAnswerTestCase1",
+                text: "MODIFY ANSWER TEST CASE 1 - formerly \"noMoreIntimateEncounters\" - now requires lawful",
+                assetId: AssetIds.modifyNoMoreIntimate,
+                mode: SetupMode.Modify,
+                configure: a =>
+                {
+                    a.AlignmentRequirement = AlignmentComponent.Lawful;
+                }
+            );
+
+            // modify AnswersList
+            var modifyAnswersListTestBasic = DialogueBlueprintBuilder.CreateOrModifyAnswersList(
+                name: "modifyAnswersListTestBasic",
+                assetId: AssetIds.aLWantToTalkToYouAboutWhatItMeansToBeATiefling,
+                mode: SetupMode.Modify,
+                configure: al =>
+                {
+                    al.Answers.Add(newAnswerTestCase1);
+                    Main.Log.Log($"TestCases, ModifyAnswersList, added {newAnswerTestCase1.name} to {al.name}");
+                }
+                );
+
+
+
+        }
+
+    }
+}
