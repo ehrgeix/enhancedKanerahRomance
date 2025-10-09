@@ -12,6 +12,8 @@ using UnityEngine;
 using static enhancedKanerahRomance.modContent.AssetIds;
 using static enhancedKanerahRomance.modStructure.DialogueBlueprintBuilder;
 using static enhancedKanerahRomance.modStructure.DialogueHelpers;
+using static enhancedKanerahRomance.modStructure.ConditionHelpers;
+using static enhancedKanerahRomance.modStructure.ActionListBlueprintBuilderAndHelpers;
 using static enhancedKanerahRomance.modStructure.MiscBlueprintBuilder;
 using static enhancedKanerahRomance.modStructure.RegistrationHelpers;
 
@@ -68,10 +70,10 @@ namespace enhancedKanerahRomance.modContent
                     // c.Continue = DialogueHelpers.CueSelectionHandling.Create(
                     // new[] { "AssetIds.newcue..." } );
                     // c.Conditions = ConditionHandling.Default();
-                    // c.OnShow = DialogueHelpers.ActionListHandling.Default();
-                    // c.OnStop = DialogueHelpers.ActionListHandling.Default();
+                    // c.OnShow = ActionListHelpers.ActionListHandling.Default();
+                    // c.OnStop = ActionListHelpers.ActionListHandling.Default();
                     // c.AlignmentShift = DialogueHelpers.AlignmentShiftHandling.Default();
-                    c.Answers = DialogueHelpers.CueAnswersHandling.Create(AssetIds.newAnswersListTestCase1); // create needed if actionlist, default does NOT return answerslist
+                    c.Answers = DialogueHelpers.CueAddAnswersListHandling.Create(AssetIds.newAnswersListTestCase1); // create needed if actionlist, default does NOT return answerslist
                 }
             );
 
@@ -181,8 +183,8 @@ namespace enhancedKanerahRomance.modContent
             // BLOCK OF VARIABLES FOR ANSWER USE
 
             // create/register flags
-            var newTestCounterFlag = MiscBlueprintBuilder.CreateBlueprintUnlockableFlag(AssetIds.newTestCounterFlag);
-            var newTestUnlockedFlag = MiscBlueprintBuilder.CreateBlueprintUnlockableFlag(AssetIds.newTestUnlockedFlag);
+            var newTestCounterFlag = MiscBlueprintBuilder.CreateUnlockableFlag(AssetIds.newTestCounterFlag);
+            var newTestUnlockedFlag = MiscBlueprintBuilder.CreateUnlockableFlag(AssetIds.newTestUnlockedFlag);
 
             // example stat check (persuasion), to use in createAnswer
             // this doesn't work for what I wanted, this is a check to SHOW THE ANSWER - usage: a.ShowCheck = persuasionCheckExample;
@@ -215,9 +217,9 @@ namespace enhancedKanerahRomance.modContent
                     // a.ShowOnceCurrentDialog = false;
                     // a.CharacterSelection = DialogueHelpers.CharacterSelectionHandling.Default();
                     // a.ShowCheck = DialogueHelpers.ShowCheckHandling.Default();
-                    // a.ShowConditions = DialogueHelpers.ConditionHandling.Default();
-                    // a.SelectConditions = DialogueHelpers.ConditionHandling.Default();
-                    // a.OnSelect = DialogueHelpers.ActionListHandling.Default();
+                    // a.ShowConditions = ConditionHelpers.ConditionHandling.Default();
+                    // a.SelectConditions = ConditionHelpers.ConditionHandling.Default();
+                    // a.OnSelect = ActionListHelpers.ActionListHandling.Default();
                     // a.AlignmentShift = DialogueHelpers.AlignmentShiftHandling.Default();
                     a.AlignmentShift = lawfulShiftExample;
                     a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.aLWantToTalkToYouAboutWhatItMeansToBeATiefling);
@@ -319,7 +321,7 @@ namespace enhancedKanerahRomance.modContent
                     new[] { AssetIds.newCueTestCase2 }
                     );
 
-                    a.OnSelect = DialogueHelpers.ActionListHandling.FlagSet(AssetIds.newTestUnlockedFlag, 1);
+                    a.OnSelect = ActionListBlueprintBuilderAndHelpers.ActionListHandling.FlagSet(AssetIds.newTestUnlockedFlag, 1);
                     a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
                 }
             );
@@ -335,7 +337,7 @@ namespace enhancedKanerahRomance.modContent
                     a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
                     new[] { AssetIds.newCueTestCase2 }
                     );
-                    a.ShowConditions = DialogueHelpers.ConditionHandling.FlagUnlocked(AssetIds.newTestUnlockedFlag);
+                    a.ShowConditions = ConditionHelpers.ConditionHandling.FlagUnlocked(AssetIds.newTestUnlockedFlag);
                     a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
                 }
             );
@@ -351,7 +353,7 @@ namespace enhancedKanerahRomance.modContent
                     a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
                     new[] { AssetIds.newCueTestCase2 }
                     );
-                    a.OnSelect = DialogueHelpers.ActionListHandling.FlagIncrement(AssetIds.newTestCounterFlag, 1);
+                    a.OnSelect = ActionListBlueprintBuilderAndHelpers.ActionListHandling.FlagIncrement(AssetIds.newTestCounterFlag, 1);
                     a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
                 }
             );
@@ -367,7 +369,7 @@ namespace enhancedKanerahRomance.modContent
                     a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
                     new[] { AssetIds.newCueTestCase2 }
                     );
-                    a.ShowConditions = DialogueHelpers.ConditionHandling.FlagValue(
+                    a.ShowConditions = ConditionHelpers.ConditionHandling.FlagValue(
                         flagGuid: AssetIds.newTestCounterFlag,
                         value: 2,
                         comparison: ">="

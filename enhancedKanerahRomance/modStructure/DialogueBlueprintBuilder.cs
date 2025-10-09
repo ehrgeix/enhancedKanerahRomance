@@ -10,6 +10,8 @@ using Kingmaker.UnitLogic.Alignments;
 using System.Collections.Generic;
 using UnityEngine;
 using static enhancedKanerahRomance.modStructure.DialogueHelpers;
+using static enhancedKanerahRomance.modStructure.ConditionHelpers;
+using static enhancedKanerahRomance.modStructure.ActionListBlueprintBuilderAndHelpers;
 using static enhancedKanerahRomance.modStructure.RegistrationHelpers;
 using static UnityModManagerNet.UnityModManager.TextureReplacer.Skin;
 using static enhancedKanerahRomance.modContent.AssetIds;
@@ -17,7 +19,7 @@ using System.Diagnostics.Eventing.Reader;
 
 namespace enhancedKanerahRomance.modStructure
 {
-    // DialogueBuilder has four main components! CreateOrModifyCue, CreateOrModifyAnswer, CreateOrModifyAnswersList, and CreateCheck
+    // DialogueBuilder has five main components! CreateOrModifyCue, CreateOrModifyAnswer, CreateOrModifyAnswersList, CreateCheck, and CreateOrModifyDialog
     public static class DialogueBlueprintBuilder
     {
         // Support
@@ -62,10 +64,10 @@ namespace enhancedKanerahRomance.modStructure
                         cue.TurnSpeaker = false;
                         cue.Animation = DialogAnimation.None;
                         cue.Listener = null;
-                        cue.OnShow = DialogueHelpers.ActionListHandling.Default(); // Builder
-                        cue.OnStop = DialogueHelpers.ActionListHandling.Default(); // Builder
+                        cue.OnShow = ActionListBlueprintBuilderAndHelpers.ActionListHandling.Default(); // Builder
+                        cue.OnStop = ActionListBlueprintBuilderAndHelpers.ActionListHandling.Default(); // Builder
                         cue.AlignmentShift = AlignmentShiftHandling.Default(); // Builder
-                        cue.Answers = DialogueHelpers.CueAnswersHandling.Default(); // Builder
+                        cue.Answers = DialogueHelpers.CueAddAnswersListHandling.Default(); // Builder
                         cue.Continue = DialogueHelpers.CueSelectionHandling.Default(); // Builder
                         cue.ParentAsset = null; // cannot be null for create, checked later
                         cue.ShowOnce = false;
@@ -146,11 +148,11 @@ namespace enhancedKanerahRomance.modStructure
                         answer.ShowCheck = DialogueHelpers.ShowCheckHandling.Default();
                         answer.DebugMode = false; // always false
                         answer.CharacterSelection = DialogueHelpers.CharacterSelectionHandling.Default(); // Builder
-                        answer.ShowConditions = DialogueHelpers.ConditionHandling.Default(); // Builder
-                        answer.SelectConditions = DialogueHelpers.ConditionHandling.Default(); // Builder, requires separate variable
+                        answer.ShowConditions = ConditionHelpers.ConditionHandling.Default(); // Builder
+                        answer.SelectConditions = ConditionHelpers.ConditionHandling.Default(); // Builder, requires separate variable
                         answer.RequireValidCue = false; // always false
                         answer.AddToHistory = true; // always true
-                        answer.OnSelect = DialogueHelpers.ActionListHandling.Default(); // Builder
+                        answer.OnSelect = ActionListBlueprintBuilderAndHelpers.ActionListHandling.Default(); // Builder
                         answer.FakeChecks = new CheckData[0]; // unknown, always blank?
                         answer.AlignmentShift = DialogueHelpers.AlignmentShiftHandling.Default(); // Builder
                         answer.ParentAsset = null; // Builder
@@ -225,7 +227,7 @@ namespace enhancedKanerahRomance.modStructure
                     try
                     {
                         answersList.ShowOnce = false; // default
-                        answersList.Conditions = DialogueHelpers.ConditionHandling.Default(); // Builder
+                        answersList.Conditions = ConditionHelpers.ConditionHandling.Default(); // Builder
                         answersList.Answers = new List<BlueprintAnswerBase>(); // 
                         answersList.ParentAsset = null; // must be set in configure if create
                         answersList.AlignmentRequirement = AlignmentComponent.None; // TODO check this, defaults just say "None,"?
@@ -301,7 +303,7 @@ namespace enhancedKanerahRomance.modStructure
                         check.DCModifiers = new DCModifier[0]; // always empty array
 
                         // success & failure nextCue handling
-                        var cues = CheckSucessFailHandling.Create(successId, failId);
+                        var cues = CheckAddSuccessFailCuesHandling.Create(successId, failId);
                         check.Success = cues.success;
                         check.Fail = cues.fail;
 
@@ -328,6 +330,78 @@ namespace enhancedKanerahRomance.modStructure
                 return check;
             }
         }
+
+        // DIALOG HANDLING
+
+        // dialog builder
+        // this is UNTESTED in create mode
+        // so far we have ONLY used modify to change Kanerah's barks post-sex
+        public static BlueprintDialog CreateOrModifyDialog(string name,
+            string assetId,
+            SetupMode mode,
+            Action<BlueprintDialog> configure
+            )
+        {
+            BlueprintDialog dialog;
+
+            if (mode == SetupMode.Create)
+            {
+                dialog = UnityEngine.ScriptableObject.CreateInstance<BlueprintDialog>();
+
+                // dialog structure flags
+                dialog.name = name;
+
+                // Register globally
+                RegistrationHelpers.RegisterBlueprint(dialog, assetId);
+
+                // Delay handling the rest
+                RegistrationHelpers.DelayedBlueprintBuildHandling.Add(() =>
+                {
+                    try
+                    {
+                        dialog.FirstCue = DialogueHelpers.CueSelectionHandling.Default(); // TODO, FIX, THIS HAS TO BE A NEW DIALOG FILE CALLED CUESELECTION
+                        dialog.StartPosition = null;
+                        dialog.Conditions = ConditionHelpers.ConditionHandling.Default(); // Builder
+                        dialog.StartActions = ActionListBlueprintBuilderAndHelpers.ActionListHandling.Default(); // Builder
+                        dialog.FinishActions = ActionListBlueprintBuilderAndHelpers.ActionListHandling.Default(); // Builder
+                        dialog.ReplaceActions = ActionListBlueprintBuilderAndHelpers.ActionListHandling.Default(); // Builder
+                        dialog.TurnPlayer = true;
+                        dialog.TurnFirstSpeaker = true;
+                        dialog.Type = DialogType.Common;
+                        dialog.Components = new BlueprintComponent[0]; // unknown, always blank?
+
+
+                        // configure dialog before register
+                        configure?.Invoke(dialog);
+
+                        // check we have a valid firstCue if creating
+                        if (dialog.FirstCue == null)
+                        {
+                            Main.Log.Log($"DialogueBlueprintBuilder, CreateOrModifyDialog, ERROR: firstCue not set {name}");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        Main.Log.Log($"DialoguBlueprintBuilder, CreateOrModifyDialog, ERROR: {name}: {ex}");
+                    }
+                }
+                );
+            }
+            else // modify dialog
+            {
+                dialog = ResourcesLibrary.TryGetBlueprint<BlueprintDialog>(assetId);
+                if (dialog == null)
+                {
+                    Main.Log.Log($"DialogueBuilder, CreateOrModifyDialog, ERROR: modifying {assetId}");
+                    return null;
+                }
+
+                // configure dialog
+                configure?.Invoke(dialog);
+            }
+            return dialog;
+        }
+
     }
 }
 

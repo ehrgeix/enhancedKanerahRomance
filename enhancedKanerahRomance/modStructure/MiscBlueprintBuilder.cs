@@ -15,13 +15,15 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static enhancedKanerahRomance.modContent.AssetIds;
+using static enhancedKanerahRomance.modStructure.ConditionHelpers;
+using static enhancedKanerahRomance.modStructure.ActionListBlueprintBuilderAndHelpers;
 
 namespace enhancedKanerahRomance.modStructure
 {
     public static class MiscBlueprintBuilder
     {
 
-            public static BlueprintUnlockableFlag CreateBlueprintUnlockableFlag(string assetId)
+            public static BlueprintUnlockableFlag CreateUnlockableFlag(string assetId)
         {
             // create flag blueprint
             var unlockFlag = UnityEngine.ScriptableObject.CreateInstance<BlueprintUnlockableFlag>();

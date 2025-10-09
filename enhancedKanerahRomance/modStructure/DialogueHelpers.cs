@@ -57,9 +57,10 @@ namespace enhancedKanerahRomance.modStructure
             }
         }
 
-        // builder: CheckSuccessFailHandling
+        // builder: CheckAddSuccessFailCuesHandling
         // this is a TUPLE. we are learning
-        public static class CheckSucessFailHandling
+        // this is used to create the success/fail cue output for blueprintCheck
+        public static class CheckAddSuccessFailCuesHandling
         {
             public static (BlueprintCue success, BlueprintCue fail) Create(string successId, string failId)
             {
@@ -67,18 +68,18 @@ namespace enhancedKanerahRomance.modStructure
                 var failCue = ResourcesLibrary.TryGetBlueprint<BlueprintCue>(failId);
 
                 if (successCue == null)
-                    Main.Log.Log($"DialogueHelpers, CheckSucessFailHandling, ERROR: SuccessCue not found for {successId}");
+                    Main.Log.Log($"DialogueHelpers, CheckAddSuccessFailCuesHandling, ERROR: SuccessCue not found for {successId}");
 
                 if (failCue == null)
-                    Main.Log.Log($"DialogueHelpers, CheckSucessFailHandling, ERROR: FailCue not found for {failId}");
+                    Main.Log.Log($"DialogueHelpers, CheckAddSuccessFailCuesHandling, ERROR: FailCue not found for {failId}");
 
                 return (successCue, failCue);
             }
         }
 
-        // builder/helper: CueAnswersHandling
+        // builder/helper: CueAddAnswersListHandling
         // used to give a cue an answersList
-        public static class CueAnswersHandling
+        public static class CueAddAnswersListHandling
         {
             // default = empty list
             public static List<BlueprintAnswerBase> Default()
@@ -92,7 +93,7 @@ namespace enhancedKanerahRomance.modStructure
                 var answersList = ResourcesLibrary.TryGetBlueprint<BlueprintAnswersList>(answersListInput);
                 if (answersList == null)
                 {
-                    Main.Log.Log("DialogueHelpers, CueAnswersHandling, ERROR: answersList null");
+                    Main.Log.Log("DialogueHelpers, CueAddAnswersListHandling, ERROR: answersList null");
 
                 }
                 return new List<BlueprintAnswerBase>()
@@ -105,6 +106,7 @@ namespace enhancedKanerahRomance.modStructure
 
         // builder: CueSelection
         // used for nextCue in answers
+        // and firstCue in dialog
         public static class CueSelectionHandling
         {
             // default = empty list
@@ -199,131 +201,6 @@ namespace enhancedKanerahRomance.modStructure
                 };
             }
         }
-
-        // builder: ConditionHandling
-        // we will likely have to add handling for different conditions as we expand the mod. this just checks flags are unlocked for now (or does nothing)
-        public static class ConditionHandling
-        {
-            public static ConditionsChecker Default()
-            {
-                return new ConditionsChecker
-                {
-                    Operation = Operation.And,
-                    Conditions = new Condition[0]
-                };
-            }
-            // TODO, FlagUnlocked - IMPROVE
-            public static ConditionsChecker FlagUnlocked(string flagGuid)
-            {
-                var flag = ResourcesLibrary.TryGetBlueprint<BlueprintUnlockableFlag>(flagGuid);
-                if (flag == null)
-                {
-                    Main.Log.Log("DialogueHelpers, ConditionHandling, ERROR: flag null");
-                }
-
-                var condition = ScriptableObject.CreateInstance<FlagUnlocked>();
-                condition.ConditionFlag = flag;
-                condition.ExceptSpecifiedValues = false;
-                condition.SpecifiedValues = Array.Empty<int>();
-
-                return new ConditionsChecker
-                {
-                    Operation = Operation.And,
-                    Conditions = new Condition[] { condition }
-                };
-            }
-
-            // FlagValueCheck
-            public static ConditionsChecker FlagValue(string flagGuid, int value, string comparison = "==")
-            {
-                var flag = ResourcesLibrary.TryGetBlueprint<BlueprintUnlockableFlag>(flagGuid);
-                if (flag == null)
-                {
-                    Main.Log.Log("DialogueHelpers, ConditionsChecker, ERROR: flag null");
-                }
-
-                var condition = ScriptableObject.CreateInstance<FlagInRange>();
-                condition.Flag = flag;
-
-                switch (comparison)
-                {
-                    case "==":
-                        condition.MinValue = value;
-                        condition.MaxValue = value;
-                        break;
-                    case ">=":
-                        condition.MinValue = value;
-                        condition.MaxValue = int.MaxValue;
-                        break;
-                    case ">":
-                        condition.MinValue = value + 1;
-                        condition.MaxValue = int.MaxValue;
-                        break;
-                    case "<=":
-                        condition.MinValue = int.MinValue;
-                        condition.MaxValue = value;
-                        break;
-                    case "<":
-                        condition.MinValue = int.MinValue;
-                        condition.MaxValue = value - 1;
-                        break;
-                    default:
-                        throw new ArgumentException($"DialogueHelpers, ConditionsChecker, ERROR: wrong operator used");
-                }
-
-                return new ConditionsChecker
-                {
-                    Operation = Operation.And,
-                    Conditions = new Condition[] { condition }
-                };
-            }
-        }
-
-        // Builder ActionList
-        // we will likely have to add handling for specific different actionlists as we expand the mod
-        // note BUILDING flags is in MiscBlueprintBuilder, this is just for unlocking and incrementing flags
-        public static class ActionListHandling
-        {
-            public static ActionList Default()
-            {
-                return new ActionList
-                {
-                    Actions = new Kingmaker.ElementsSystem.GameAction[0]
-                };
-            }
-
-            // ActionList Builder
-            public static ActionList Create(params Kingmaker.ElementsSystem.GameAction[] actions)
-            {
-                return new ActionList
-                {
-                    Actions = actions ?? new Kingmaker.ElementsSystem.GameAction[0]
-                };
-            }
-
-            // "unlock" a flag (I think this sets from 0 to 1?)
-            public static ActionList FlagSet(string flagGuid, int value)
-            {
-                var setFlag = ScriptableObject.CreateInstance<UnlockFlag>();
-                setFlag.flag = ResourcesLibrary.TryGetBlueprint<BlueprintUnlockableFlag>(flagGuid);
-                setFlag.flagValue = value;
-
-                return Create(setFlag);
-            }
-
-            // increment a flag
-            public static ActionList FlagIncrement(string flagGuid, int amount)
-            {
-                    var flag = ResourcesLibrary.TryGetBlueprint<BlueprintUnlockableFlag>(flagGuid);
-
-                    var increment = ScriptableObject.CreateInstance<IncrementFlagValue>();
-                    increment.Flag = flag;
-                    increment.Value = new IntConstant { Value = amount, name = $"$IntConstant_{flagGuid}" };
-
-                return Create(increment);
-            }
-        }
-
 
         // builder: AlignmentShiftHandling
         public static class AlignmentShiftHandling
