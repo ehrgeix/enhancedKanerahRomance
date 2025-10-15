@@ -10,25 +10,20 @@ using Kingmaker.UnitLogic.Alignments;
 using System.Collections.Generic;
 using UnityEngine;
 using static enhancedKanerahRomance.modStructure.DialogueHelpers;
-using static enhancedKanerahRomance.modStructure.ConditionHelpers;
-using static enhancedKanerahRomance.modStructure.ActionListBlueprintBuilderAndHelpers;
-using static enhancedKanerahRomance.modStructure.RegistrationHelpers;
+using static enhancedKanerahRomance.modStructure.ConditionsCheckerHelpers;
+using static enhancedKanerahRomance.modStructure.ActionListBlueprintBuilder;
+using static enhancedKanerahRomance.modStructure.ActionListHelpers;
+using static enhancedKanerahRomance.modStructure.MiscLocalizationAndRegistration;
 using static UnityModManagerNet.UnityModManager.TextureReplacer.Skin;
 using static enhancedKanerahRomance.modContent.AssetIds;
 using System.Diagnostics.Eventing.Reader;
+using static enhancedKanerahRomance.modStructure.Globals;
 
 namespace enhancedKanerahRomance.modStructure
 {
     // DialogueBuilder has five main components! CreateOrModifyCue, CreateOrModifyAnswer, CreateOrModifyAnswersList, CreateCheck, and CreateOrModifyDialog
     public static class DialogueBlueprintBuilder
     {
-        // Support
-        public enum SetupMode
-        {
-            Create,
-            Modify
-        }
-
         // CUE HANDLING
 
         // Builder: create or modify cue
@@ -49,30 +44,30 @@ namespace enhancedKanerahRomance.modStructure
 
                 // cue structure flags
                 cue.name = name;
-                cue.Text = RegistrationHelpers.CreateString(assetId, text);
+                cue.Text = MiscLocalizationAndRegistration.CreateString(assetId, text);
 
                 // register globally
-                RegistrationHelpers.RegisterBlueprint(cue, assetId);
+                MiscLocalizationAndRegistration.RegisterBlueprint(cue, assetId);
 
                 // delay handling the rest
-                RegistrationHelpers.DelayedBlueprintBuildHandling.Add(() =>
+                MiscLocalizationAndRegistration.DelayedBlueprintBuild.Add(() =>
                 {
                     try
                     {
-                        cue.Speaker = DialogueHelpers.SpeakerHandling.Default(); // Builder
+                        cue.Speaker = DialogueHelpers.SpeakerHelper.Default(); // Builder
                         cue.ReusedCue = false; // always false, no extra handling
                         cue.TurnSpeaker = false;
                         cue.Animation = DialogAnimation.None;
                         cue.Listener = null;
-                        cue.OnShow = ActionListBlueprintBuilderAndHelpers.ActionListHandling.Default(); // Builder
-                        cue.OnStop = ActionListBlueprintBuilderAndHelpers.ActionListHandling.Default(); // Builder
-                        cue.AlignmentShift = AlignmentShiftHandling.Default(); // Builder
-                        cue.Answers = DialogueHelpers.CueAddAnswersListHandling.Default(); // Builder
-                        cue.Continue = DialogueHelpers.CueSelectionHandling.Default(); // Builder
+                        cue.OnShow = ActionListHelpers.Default(); // Builder
+                        cue.OnStop = ActionListHelpers.Default(); // Builder
+                        cue.AlignmentShift = AlignmentShiftHelper.Default(); // Builder
+                        cue.Answers = DialogueHelpers.CueAddAnswersListHelper.Default(); // Builder
+                        cue.Continue = DialogueHelpers.CueSelectionHelper.Default(); // Builder
                         cue.ParentAsset = null; // cannot be null for create, checked later
                         cue.ShowOnce = false;
                         cue.ShowOnceCurrentDialog = false;
-                        cue.Conditions = ConditionHandling.Default(); // Builder
+                        cue.Conditions = ConditionsCheckerHelpers.Default(); // Builder
                         cue.Components = new BlueprintComponent[0]; // unknown, always blank?
 
                         // configure cue
@@ -86,7 +81,7 @@ namespace enhancedKanerahRomance.modStructure
                     }
                     catch (Exception ex)
                     {
-                        Main.Log.Log($"DialogueBlueprintBuilder, CreateOrModifyCue, DelayedBlueprintHandling, ERROR: {name}: {ex}");
+                        Main.Log.Log($"DialogueBlueprintBuilder, CreateOrModifyCue, DelayedBlueprintBuild, ERROR: {name}: {ex}");
                     }
                 });
             }
@@ -102,7 +97,7 @@ namespace enhancedKanerahRomance.modStructure
                 }
 
                 // update/register cue text
-                DialogueHelpers.UpdateCueText(cue, text);
+                DialogueHelpers.UpdateCueTextHelper(cue, text);
 
                 // configure cue
                 configure?.Invoke(cue);
@@ -131,30 +126,30 @@ namespace enhancedKanerahRomance.modStructure
 
                 // answer structure flags
                 answer.name = name;
-                answer.Text = RegistrationHelpers.CreateString(assetId, text); // Builder
+                answer.Text = MiscLocalizationAndRegistration.CreateString(assetId, text); // Builder
 
                 // Register globally
-                RegistrationHelpers.RegisterBlueprint(answer, assetId);
+                MiscLocalizationAndRegistration.RegisterBlueprint(answer, assetId);
 
                 // Delay handling the rest
-                RegistrationHelpers.DelayedBlueprintBuildHandling.Add(() =>
+                MiscLocalizationAndRegistration.DelayedBlueprintBuild.Add(() =>
                 {
                     try
                     {
                         answer.ReusedCue = false; // always false
-                        answer.NextCue = DialogueHelpers.CueSelectionHandling.Default(); // Builder, create answer ALWAYS needs create() input
+                        answer.NextCue = DialogueHelpers.CueSelectionHelper.Default(); // Builder, create answer ALWAYS needs create() input
                         answer.ShowOnce = false;
                         answer.ShowOnceCurrentDialog = false;
-                        answer.ShowCheck = DialogueHelpers.ShowCheckHandling.Default();
+                        answer.ShowCheck = DialogueHelpers.ShowCheckHelper.Default();
                         answer.DebugMode = false; // always false
-                        answer.CharacterSelection = DialogueHelpers.CharacterSelectionHandling.Default(); // Builder
-                        answer.ShowConditions = ConditionHelpers.ConditionHandling.Default(); // Builder
-                        answer.SelectConditions = ConditionHelpers.ConditionHandling.Default(); // Builder, requires separate variable
+                        answer.CharacterSelection = DialogueHelpers.CharacterSelectionHelper.Default(); // Builder
+                        answer.ShowConditions = ConditionsCheckerHelpers.Default(); // Builder
+                        answer.SelectConditions = ConditionsCheckerHelpers.Default(); // Builder, requires separate variable
                         answer.RequireValidCue = false; // always false
                         answer.AddToHistory = true; // always true
-                        answer.OnSelect = ActionListBlueprintBuilderAndHelpers.ActionListHandling.Default(); // Builder
+                        answer.OnSelect = ActionListHelpers.Default(); // Builder
                         answer.FakeChecks = new CheckData[0]; // unknown, always blank?
-                        answer.AlignmentShift = DialogueHelpers.AlignmentShiftHandling.Default(); // Builder
+                        answer.AlignmentShift = DialogueHelpers.AlignmentShiftHelper.Default(); // Builder
                         answer.ParentAsset = null; // Builder
                         answer.AlignmentRequirement = AlignmentComponent.None;
                         answer.Components = new BlueprintComponent[0]; // unknown, always blank?
@@ -192,7 +187,7 @@ namespace enhancedKanerahRomance.modStructure
                 }
 
                 // update/register answer text 
-                DialogueHelpers.UpdateAnswerText(answer, text);
+                DialogueHelpers.UpdateAnswerTextHelper(answer, text);
 
                 // configure answer
                 configure?.Invoke(answer);
@@ -219,15 +214,15 @@ namespace enhancedKanerahRomance.modStructure
                 answersList.name = name;
 
                 // register globally
-                RegistrationHelpers.RegisterBlueprint(answersList, assetId);
+                MiscLocalizationAndRegistration.RegisterBlueprint(answersList, assetId);
 
                 // Delay handling the rest
-                RegistrationHelpers.DelayedBlueprintBuildHandling.Add(() =>
+                MiscLocalizationAndRegistration.DelayedBlueprintBuild.Add(() =>
                 {
                     try
                     {
                         answersList.ShowOnce = false; // default
-                        answersList.Conditions = ConditionHelpers.ConditionHandling.Default(); // Builder
+                        answersList.Conditions = ConditionsCheckerHelpers.Default(); // Builder
                         answersList.Answers = new List<BlueprintAnswerBase>(); // 
                         answersList.ParentAsset = null; // must be set in configure if create
                         answersList.AlignmentRequirement = AlignmentComponent.None; // TODO check this, defaults just say "None,"?
@@ -290,10 +285,10 @@ namespace enhancedKanerahRomance.modStructure
                 // note there's no text, so we don't need to register a string
 
                 // register globally
-                RegistrationHelpers.RegisterBlueprint(check, assetId);
+                MiscLocalizationAndRegistration.RegisterBlueprint(check, assetId);
 
                 // Delay handling the rest
-                RegistrationHelpers.DelayedBlueprintBuildHandling.Add(() =>
+                MiscLocalizationAndRegistration.DelayedBlueprintBuild.Add(() =>
                 {
                     try
                     {
@@ -303,14 +298,14 @@ namespace enhancedKanerahRomance.modStructure
                         check.DCModifiers = new DCModifier[0]; // always empty array
 
                         // success & failure nextCue handling
-                        var cues = CheckAddSuccessFailCuesHandling.Create(successId, failId);
+                        var cues = CheckAddSuccessFailCuesHelper.Create(successId, failId);
                         check.Success = cues.success;
                         check.Fail = cues.fail;
 
                         check.ParentAsset = null; // cannot be null for create, checked later
                         check.ShowOnce = false;
                         check.ShowOnceCurrentDialog = false;
-                        check.Conditions = ConditionHandling.Default(); // Builder
+                        check.Conditions = ConditionsCheckerHelpers.Default(); // Builder
                         check.Components = new BlueprintComponent[0]; // unused?
 
                         // configure
@@ -352,19 +347,19 @@ namespace enhancedKanerahRomance.modStructure
                 dialog.name = name;
 
                 // Register globally
-                RegistrationHelpers.RegisterBlueprint(dialog, assetId);
+                MiscLocalizationAndRegistration.RegisterBlueprint(dialog, assetId);
 
                 // Delay handling the rest
-                RegistrationHelpers.DelayedBlueprintBuildHandling.Add(() =>
+                MiscLocalizationAndRegistration.DelayedBlueprintBuild.Add(() =>
                 {
                     try
                     {
-                        dialog.FirstCue = DialogueHelpers.CueSelectionHandling.Default(); // TODO, FIX, THIS HAS TO BE A NEW DIALOG FILE CALLED CUESELECTION
+                        dialog.FirstCue = DialogueHelpers.CueSelectionHelper.Default(); // TODO, FIX, THIS HAS TO BE A NEW DIALOG FILE CALLED CUESELECTION
                         dialog.StartPosition = null;
-                        dialog.Conditions = ConditionHelpers.ConditionHandling.Default(); // Builder
-                        dialog.StartActions = ActionListBlueprintBuilderAndHelpers.ActionListHandling.Default(); // Builder
-                        dialog.FinishActions = ActionListBlueprintBuilderAndHelpers.ActionListHandling.Default(); // Builder
-                        dialog.ReplaceActions = ActionListBlueprintBuilderAndHelpers.ActionListHandling.Default(); // Builder
+                        dialog.Conditions = ConditionsCheckerHelpers.Default(); // Builder
+                        dialog.StartActions = ActionListHelpers.Default(); // Builder
+                        dialog.FinishActions = ActionListHelpers.Default(); // Builder
+                        dialog.ReplaceActions = ActionListHelpers.Default(); // Builder
                         dialog.TurnPlayer = true;
                         dialog.TurnFirstSpeaker = true;
                         dialog.Type = DialogType.Common;

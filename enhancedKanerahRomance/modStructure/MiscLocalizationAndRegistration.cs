@@ -13,8 +13,8 @@ using static enhancedKanerahRomance.modContent.AssetIds;
 
 namespace enhancedKanerahRomance.modStructure
 {   
-    // string & blueprint registration helpers
-    public static class RegistrationHelpers
+    // string & blueprint registration
+    internal class MiscLocalizationAndRegistration
     {
         // CreateString helper, localization, creates a string with a name and attached text
         public static LocalizedString CreateString(string key, string value)
@@ -72,7 +72,7 @@ namespace enhancedKanerahRomance.modStructure
         }
 
         // late processing to handle situations where e.g., a cue references an answer which references a cue, so we have to create emptyish blueprints and fill them in later
-        public static class DelayedBlueprintBuildHandling
+        public static class DelayedBlueprintBuild
         {
             private static readonly List<Action> queue = new();
 
@@ -91,7 +91,7 @@ namespace enhancedKanerahRomance.modStructure
                     }
                     catch (Exception ex)
                     {
-                        Main.Log.Log($"RegistrationHelpers, DelayedBlueprintBuildHandling, ERROR: {ex}");
+                        Main.Log.Log($"RegistrationHelpers, DelayedBlueprintBuild, ERROR: {ex}");
                     }
                 }
                 queue.Clear();

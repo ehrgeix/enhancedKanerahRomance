@@ -19,15 +19,13 @@ using static Kingmaker.UnitLogic.Mechanics.Conditions.ContextConditionCompareTar
 
 namespace enhancedKanerahRomance.modStructure
 {
-    internal class ConditionHelpers
+    internal class ConditionsCheckerHelpers
     {
 
-        // builder: ConditionHandling
+        // builder: ConditionsCheckerHelper
         // we will likely have to add handling for different conditions as we expand the mod. this just checks flags are unlocked for now (or does nothing)
         // this is used in basically all dialogue builders
         // one could argue that this should be in DialogueHelpers, but still
-        public static class ConditionHandling
-        {
             public static ConditionsChecker Default()
             {
                 return new ConditionsChecker
@@ -42,7 +40,7 @@ namespace enhancedKanerahRomance.modStructure
                 var flag = ResourcesLibrary.TryGetBlueprint<BlueprintUnlockableFlag>(flagGuid);
                 if (flag == null)
                 {
-                    Main.Log.Log("DialogueHelpers, ConditionHandling, ERROR: flag null");
+                    Main.Log.Log("DialogueHelpers, ConditionsCheckerHelper, ERROR: flag null");
                 }
 
                 var condition = ScriptableObject.CreateInstance<FlagUnlocked>();
@@ -101,6 +99,6 @@ namespace enhancedKanerahRomance.modStructure
                     Conditions = new Condition[] { condition }
                 };
             }
-        }
+        
     }
 }

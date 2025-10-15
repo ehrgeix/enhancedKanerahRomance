@@ -45,6 +45,9 @@ namespace enhancedKanerahRomance.modContent
         public const string newAnswersListTestCase1 = "d10dbd690b3f45b696f35731bf58554b";
 
         public const string newLawfulShiftTestCase = "061cb70dcfac4c97876ae894c2f6d013";
+
+        // Test case asset IDs - ActionList
+        public const string newBarkString = "467cd1afe7424922b0b6376117cee743";
     }
 
 }

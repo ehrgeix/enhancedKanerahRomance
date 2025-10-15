@@ -12,20 +12,22 @@ using UnityEngine;
 using static enhancedKanerahRomance.modContent.AssetIds;
 using static enhancedKanerahRomance.modStructure.DialogueBlueprintBuilder;
 using static enhancedKanerahRomance.modStructure.DialogueHelpers;
-using static enhancedKanerahRomance.modStructure.ConditionHelpers;
-using static enhancedKanerahRomance.modStructure.ActionListBlueprintBuilderAndHelpers;
+using static enhancedKanerahRomance.modStructure.ConditionsCheckerHelpers;
+using static enhancedKanerahRomance.modStructure.ActionListBlueprintBuilder;
+using static enhancedKanerahRomance.modStructure.ActionListHelpers;
 using static enhancedKanerahRomance.modStructure.MiscBlueprintBuilder;
-using static enhancedKanerahRomance.modStructure.RegistrationHelpers;
+using static enhancedKanerahRomance.modStructure.MiscLocalizationAndRegistration;
+using static enhancedKanerahRomance.modStructure.Globals;
 
 namespace enhancedKanerahRomance.modContent
 {
-    internal class TestCases
+    internal class DialogueTestCases
     {
-        public static void AddTestCases()
+        public static void AddDialogueTestCases()
         {
 
             // BLOCK OF VARIABLES FOR CUE USE
-            var speakerKanerah = DialogueHelpers.SpeakerHandling.Create(
+            var speakerKanerah = DialogueHelpers.SpeakerHelper.Create(
                 blueprint: ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(AssetIds.kanerahPortrait),
                 moveCamera: true,
                 checkDistance: true,
@@ -34,7 +36,7 @@ namespace enhancedKanerahRomance.modContent
                 speakerPortrait: null
                 );
 
-                var speakerKanerah2 = DialogueHelpers.SpeakerHandling.Create(
+                var speakerKanerah2 = DialogueHelpers.SpeakerHelper.Create(
                 blueprint: ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(AssetIds.kanerahPortrait),
                 moveCamera: true,
                 checkDistance: true,
@@ -43,7 +45,7 @@ namespace enhancedKanerahRomance.modContent
                 speakerPortrait: null
                 );
 
-                var speakerKanerah3 = DialogueHelpers.SpeakerHandling.Create(
+                var speakerKanerah3 = DialogueHelpers.SpeakerHelper.Create(
                 blueprint: null,
                 moveCamera: true,
                 checkDistance: true,
@@ -63,17 +65,17 @@ namespace enhancedKanerahRomance.modContent
                 mode: SetupMode.Create,
                 configure: c =>
                 {
-                    c.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswerTestCase1); // CreateCue requires this
+                    c.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswerTestCase1); // CreateCue requires this
                     c.Speaker = speakerKanerah;
                     // c.TurnSpeaker = true;
-                    c.Continue = DialogueHelpers.CueSelectionHandling.Default(); // create needed if cue continues to another, default does NOT continue
-                    // c.Continue = DialogueHelpers.CueSelectionHandling.Create(
+                    c.Continue = DialogueHelpers.CueSelectionHelper.Default(); // create needed if cue continues to another, default does NOT continue
+                    // c.Continue = DialogueHelpers.CueSelectionHelper.Create(
                     // new[] { "AssetIds.newcue..." } );
-                    // c.Conditions = ConditionHandling.Default();
-                    // c.OnShow = ActionListHelpers.ActionListHandling.Default();
-                    // c.OnStop = ActionListHelpers.ActionListHandling.Default();
-                    // c.AlignmentShift = DialogueHelpers.AlignmentShiftHandling.Default();
-                    c.Answers = DialogueHelpers.CueAddAnswersListHandling.Create(AssetIds.newAnswersListTestCase1); // create needed if actionlist, default does NOT return answerslist
+                    // c.Conditions = ConditionHelper.Default();
+                    // c.OnShow = ActionListHelpers.ActionListHelper.Default();
+                    // c.OnStop = ActionListHelpers.ActionListHelper.Default();
+                    // c.AlignmentShift = DialogueHelpers.AlignmentShiftHelper.Default();
+                    c.Answers = DialogueHelpers.CueAddAnswersListHelper.Create(AssetIds.newAnswersListTestCase1); // create needed if actionlist, default does NOT return answerslist
                 }
             );
 
@@ -85,10 +87,10 @@ namespace enhancedKanerahRomance.modContent
                 mode: SetupMode.Create,
                 configure: c =>
                 {
-                    c.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswerTestCase2);
+                    c.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswerTestCase2);
                     c.Speaker = speakerKanerah2;
                     c.TurnSpeaker = true;
-                    c.Continue = DialogueHelpers.CueSelectionHandling.Default();
+                    c.Continue = DialogueHelpers.CueSelectionHelper.Default();
                 }
             );
 
@@ -100,9 +102,9 @@ namespace enhancedKanerahRomance.modContent
                 mode: SetupMode.Create,
                 configure: c =>
                 {
-                    c.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswerTestCase3);
+                    c.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswerTestCase3);
                     c.Speaker = speakerKanerah3;
-                    c.Continue = DialogueHelpers.CueSelectionHandling.Default();
+                    c.Continue = DialogueHelpers.CueSelectionHelper.Default();
                 }
             );
 
@@ -114,9 +116,9 @@ namespace enhancedKanerahRomance.modContent
                 mode: SetupMode.Create,
                 configure: c =>
                 {
-                    c.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswerTestCase4);
+                    c.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswerTestCase4);
                     c.Speaker = speakerKanerah;
-                     c.Continue = DialogueHelpers.CueSelectionHandling.Create(
+                     c.Continue = DialogueHelpers.CueSelectionHelper.Create(
                      new[] { AssetIds.newCueTestCase5 } );
                 }
             );
@@ -129,9 +131,9 @@ namespace enhancedKanerahRomance.modContent
                 mode: SetupMode.Create,
                 configure: c =>
                 {
-                    c.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newCueTestCase4);
+                    c.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newCueTestCase4);
                     c.Speaker = null; // TODO check
-                    c.Continue = DialogueHelpers.CueSelectionHandling.Default();
+                    c.Continue = DialogueHelpers.CueSelectionHelper.Default();
                 }
             );
 
@@ -143,9 +145,9 @@ namespace enhancedKanerahRomance.modContent
                 mode: SetupMode.Create,
                 configure: c =>
                 {
-                    c.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newCheckTestCase1);
+                    c.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newCheckTestCase1);
                     c.Speaker = speakerKanerah;
-                    c.Continue = DialogueHelpers.CueSelectionHandling.Default();
+                    c.Continue = DialogueHelpers.CueSelectionHelper.Default();
                 }
             );
 
@@ -157,9 +159,9 @@ namespace enhancedKanerahRomance.modContent
                 mode: SetupMode.Create,
                 configure: c =>
                 {
-                    c.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newCheckTestCase1);
+                    c.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newCheckTestCase1);
                     c.Speaker = speakerKanerah;
-                    c.Continue = DialogueHelpers.CueSelectionHandling.Default();
+                    c.Continue = DialogueHelpers.CueSelectionHelper.Default();
                 }
             );
 
@@ -173,7 +175,7 @@ namespace enhancedKanerahRomance.modContent
                 failId: AssetIds.newCueTestCase7Fail,
                 configure: check =>
                 {
-                    check.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswerTestCase6);
+                    check.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswerTestCase6);
                     check.Type = StatType.SkillPersuasion;
                     check.DC = 55;
                 }
@@ -189,10 +191,10 @@ namespace enhancedKanerahRomance.modContent
             // example stat check (persuasion), to use in createAnswer
             // this doesn't work for what I wanted, this is a check to SHOW THE ANSWER - usage: a.ShowCheck = persuasionCheckExample;
             // used in book events only I think
-            var persuasionCheckExample = ShowCheckHandling.Create(StatType.SkillPersuasion, 55);
+            var persuasionCheckExample = ShowCheckHelper.Create(StatType.SkillPersuasion, 55);
 
             // example alignment shift variable test, to use in createAnswer
-            var lawfulShiftExample = AlignmentShiftHandling.Create(
+            var lawfulShiftExample = AlignmentShiftHelper.Create(
             AlignmentShiftDirection.Lawful,
             2,
             AssetIds.newLawfulShiftTestCase, // guid
@@ -209,20 +211,20 @@ namespace enhancedKanerahRomance.modContent
                 mode: SetupMode.Create,
                 configure: a =>
                 {
-                    a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
+                    a.NextCue = DialogueHelpers.CueSelectionHelper.Create(
                     new[] { AssetIds.newCueTestCase1 }
                     ); // THIS INPUT IS ALWAYS NEEDED FOR ANSWER CREATION (but not modification)
 
                     // a.ShowOnce = false;
                     // a.ShowOnceCurrentDialog = false;
-                    // a.CharacterSelection = DialogueHelpers.CharacterSelectionHandling.Default();
-                    // a.ShowCheck = DialogueHelpers.ShowCheckHandling.Default();
-                    // a.ShowConditions = ConditionHelpers.ConditionHandling.Default();
-                    // a.SelectConditions = ConditionHelpers.ConditionHandling.Default();
-                    // a.OnSelect = ActionListHelpers.ActionListHandling.Default();
-                    // a.AlignmentShift = DialogueHelpers.AlignmentShiftHandling.Default();
+                    // a.CharacterSelection = DialogueHelpers.CharacterSelectionHelper.Default();
+                    // a.ShowCheck = DialogueHelpers.ShowCheckHelper.Default();
+                    // a.ShowConditions = ConditionHelpers.ConditionHelper.Default();
+                    // a.SelectConditions = ConditionHelpers.ConditionHelper.Default();
+                    // a.OnSelect = ActionListHelpers.ActionListHelper.Default();
+                    // a.AlignmentShift = DialogueHelpers.AlignmentShiftHelper.Default();
                     a.AlignmentShift = lawfulShiftExample;
-                    a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.aLWantToTalkToYouAboutWhatItMeansToBeATiefling);
+                    a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.aLWantToTalkToYouAboutWhatItMeansToBeATiefling);
                     // a.AlignmentRequirement = AlignmentComponent.None;
                 }
             );
@@ -235,12 +237,12 @@ namespace enhancedKanerahRomance.modContent
                 mode: SetupMode.Create,
                 configure: a =>
                 {
-                    a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
+                    a.NextCue = DialogueHelpers.CueSelectionHelper.Create(
                     new[] { AssetIds.newCueTestCase2 }
                     ); // THIS INPUT IS ALWAYS NEEDED FOR ANSWER CREATION (but not modification)
 
                     a.ShowOnce = true;
-                    a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
+                    a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase1);
                 }
             );
 
@@ -252,12 +254,12 @@ namespace enhancedKanerahRomance.modContent
                 mode: SetupMode.Create,
                 configure: a =>
                 {
-                    a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
+                    a.NextCue = DialogueHelpers.CueSelectionHelper.Create(
                     new[] { AssetIds.newCueTestCase3 }
                     ); // THIS INPUT IS ALWAYS NEEDED FOR ANSWER CREATION (but not modification)
 
                     a.ShowOnceCurrentDialog = true;
-                    a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
+                    a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase1);
                 }
             );
 
@@ -269,11 +271,11 @@ namespace enhancedKanerahRomance.modContent
                 mode: SetupMode.Create,
                 configure: a =>
                 {
-                    a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
+                    a.NextCue = DialogueHelpers.CueSelectionHelper.Create(
                     new[] { AssetIds.newCueTestCase4,
                             AssetIds.newCueTestCase5}
                     );
-                    a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
+                    a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase1);
                 }
             );
 
@@ -285,11 +287,11 @@ namespace enhancedKanerahRomance.modContent
                 mode: SetupMode.Create,
                 configure: a =>
                 {
-                    a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
+                    a.NextCue = DialogueHelpers.CueSelectionHelper.Create(
                     new[] { AssetIds.newCueTestCase2 }
                     ); // THIS INPUT IS ALWAYS NEEDED FOR ANSWER CREATION (but not modification)
 
-                    a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
+                    a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase1);
                     a.AlignmentRequirement = AlignmentComponent.Lawful;
                 }
             );
@@ -302,10 +304,10 @@ namespace enhancedKanerahRomance.modContent
                 mode: SetupMode.Create,
                 configure: a =>
                 {
-                    a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
+                    a.NextCue = DialogueHelpers.CueSelectionHelper.Create(
                     new[] { AssetIds.newCheckTestCase1 }
                     );
-                    a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
+                    a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase1);
                 }
             );
 
@@ -317,12 +319,12 @@ namespace enhancedKanerahRomance.modContent
                 mode: SetupMode.Create,
                 configure: a =>
                 {
-                    a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
+                    a.NextCue = DialogueHelpers.CueSelectionHelper.Create(
                     new[] { AssetIds.newCueTestCase2 }
                     );
 
-                    a.OnSelect = ActionListBlueprintBuilderAndHelpers.ActionListHandling.FlagSet(AssetIds.newTestUnlockedFlag, 1);
-                    a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
+                    a.OnSelect = ActionListHelpers.FlagSet(AssetIds.newTestUnlockedFlag, 1);
+                    a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase1);
                 }
             );
 
@@ -334,11 +336,11 @@ namespace enhancedKanerahRomance.modContent
                 mode: SetupMode.Create,
                 configure: a =>
                 {
-                    a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
+                    a.NextCue = DialogueHelpers.CueSelectionHelper.Create(
                     new[] { AssetIds.newCueTestCase2 }
                     );
-                    a.ShowConditions = ConditionHelpers.ConditionHandling.FlagUnlocked(AssetIds.newTestUnlockedFlag);
-                    a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
+                    a.ShowConditions = ConditionsCheckerHelpers.FlagUnlocked(AssetIds.newTestUnlockedFlag);
+                    a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase1);
                 }
             );
 
@@ -350,11 +352,11 @@ namespace enhancedKanerahRomance.modContent
                 mode: SetupMode.Create,
                 configure: a =>
                 {
-                    a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
+                    a.NextCue = DialogueHelpers.CueSelectionHelper.Create(
                     new[] { AssetIds.newCueTestCase2 }
                     );
-                    a.OnSelect = ActionListBlueprintBuilderAndHelpers.ActionListHandling.FlagIncrement(AssetIds.newTestCounterFlag, 1);
-                    a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
+                    a.OnSelect = ActionListHelpers.FlagIncrement(AssetIds.newTestCounterFlag, 1);
+                    a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase1);
                 }
             );
 
@@ -366,15 +368,15 @@ namespace enhancedKanerahRomance.modContent
                 mode: SetupMode.Create,
                 configure: a =>
                 {
-                    a.NextCue = DialogueHelpers.CueSelectionHandling.Create(
+                    a.NextCue = DialogueHelpers.CueSelectionHelper.Create(
                     new[] { AssetIds.newCueTestCase2 }
                     );
-                    a.ShowConditions = ConditionHelpers.ConditionHandling.FlagValue(
+                    a.ShowConditions = ConditionsCheckerHelpers.FlagValue(
                         flagGuid: AssetIds.newTestCounterFlag,
                         value: 2,
                         comparison: ">="
                     );
-                    a.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newAnswersListTestCase1);
+                    a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase1);
                 }
             );
 
@@ -386,7 +388,7 @@ namespace enhancedKanerahRomance.modContent
                 mode: SetupMode.Create,
                 configure: al =>
                 {
-                    al.ParentAsset = DialogueHelpers.ParentAssetHandling(AssetIds.newCueTestCase1);
+                    al.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newCueTestCase1);
                     al.Answers.Add(newAnswerTestCase2);
                     al.Answers.Add(newAnswerTestCase3);
                     al.Answers.Add(newAnswerTestCase4);
@@ -434,7 +436,10 @@ namespace enhancedKanerahRomance.modContent
                     al.Answers.Add(newAnswerTestCase1);
                     Main.Log.Log($"TestCases, ModifyAnswersList, added {newAnswerTestCase1.name} to {al.name}");
                 }
-                );
+                
+
+
+);
 
 
 

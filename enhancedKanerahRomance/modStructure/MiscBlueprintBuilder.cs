@@ -15,8 +15,8 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using static enhancedKanerahRomance.modContent.AssetIds;
-using static enhancedKanerahRomance.modStructure.ConditionHelpers;
-using static enhancedKanerahRomance.modStructure.ActionListBlueprintBuilderAndHelpers;
+using static enhancedKanerahRomance.modStructure.ConditionsCheckerHelpers;
+using static enhancedKanerahRomance.modStructure.ActionListBlueprintBuilder;
 
 namespace enhancedKanerahRomance.modStructure
 {
@@ -29,7 +29,7 @@ namespace enhancedKanerahRomance.modStructure
             var unlockFlag = UnityEngine.ScriptableObject.CreateInstance<BlueprintUnlockableFlag>();
 
             // register globally
-            RegistrationHelpers.RegisterBlueprint(unlockFlag, assetId);
+            MiscLocalizationAndRegistration.RegisterBlueprint(unlockFlag, assetId);
 
             return unlockFlag;
         }

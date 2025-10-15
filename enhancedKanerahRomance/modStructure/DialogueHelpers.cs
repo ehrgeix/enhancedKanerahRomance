@@ -21,8 +21,8 @@ namespace enhancedKanerahRomance.modStructure
 {
     internal class DialogueHelpers
     {
-        // builder: SpeakerHandling
-        public static class SpeakerHandling
+        // builder: SpeakerHelper
+        public static class SpeakerHelper
         {
             public static DialogSpeaker Default()
             {
@@ -57,10 +57,10 @@ namespace enhancedKanerahRomance.modStructure
             }
         }
 
-        // builder: CheckAddSuccessFailCuesHandling
+        // builder: CheckAddSuccessFailCuesHelper
         // this is a TUPLE. we are learning
         // this is used to create the success/fail cue output for blueprintCheck
-        public static class CheckAddSuccessFailCuesHandling
+        public static class CheckAddSuccessFailCuesHelper
         {
             public static (BlueprintCue success, BlueprintCue fail) Create(string successId, string failId)
             {
@@ -68,18 +68,18 @@ namespace enhancedKanerahRomance.modStructure
                 var failCue = ResourcesLibrary.TryGetBlueprint<BlueprintCue>(failId);
 
                 if (successCue == null)
-                    Main.Log.Log($"DialogueHelpers, CheckAddSuccessFailCuesHandling, ERROR: SuccessCue not found for {successId}");
+                    Main.Log.Log($"DialogueHelpers, CheckAddSuccessFailCuesHelper, ERROR: SuccessCue not found for {successId}");
 
                 if (failCue == null)
-                    Main.Log.Log($"DialogueHelpers, CheckAddSuccessFailCuesHandling, ERROR: FailCue not found for {failId}");
+                    Main.Log.Log($"DialogueHelpers, CheckAddSuccessFailCuesHelper, ERROR: FailCue not found for {failId}");
 
                 return (successCue, failCue);
             }
         }
 
-        // builder/helper: CueAddAnswersListHandling
+        // builder/helper: CueAddAnswersListHelper
         // used to give a cue an answersList
-        public static class CueAddAnswersListHandling
+        public static class CueAddAnswersListHelper
         {
             // default = empty list
             public static List<BlueprintAnswerBase> Default()
@@ -93,7 +93,7 @@ namespace enhancedKanerahRomance.modStructure
                 var answersList = ResourcesLibrary.TryGetBlueprint<BlueprintAnswersList>(answersListInput);
                 if (answersList == null)
                 {
-                    Main.Log.Log("DialogueHelpers, CueAddAnswersListHandling, ERROR: answersList null");
+                    Main.Log.Log("DialogueHelpers, CueAddAnswersListHelper, ERROR: answersList null");
 
                 }
                 return new List<BlueprintAnswerBase>()
@@ -107,7 +107,7 @@ namespace enhancedKanerahRomance.modStructure
         // builder: CueSelection
         // used for nextCue in answers
         // and firstCue in dialog
-        public static class CueSelectionHandling
+        public static class CueSelectionHelper
         {
             // default = empty list
             public static CueSelection Default()
@@ -125,7 +125,7 @@ namespace enhancedKanerahRomance.modStructure
             {
                 if (cueIds == null)
                 {
-                    Main.Log.Log("DialogueHelpers, CueSelectionHandling, ERROR: cueIds null.");
+                    Main.Log.Log("DialogueHelpers, CueSelectionHelper, ERROR: cueIds null.");
                     return null;
                 }
                 ;
@@ -147,7 +147,7 @@ namespace enhancedKanerahRomance.modStructure
                         }
                         else
                         {
-                            Main.Log.Log($"DialogueHelpers, CueSelectionHandling, ERROR: broken cue {id}");
+                            Main.Log.Log($"DialogueHelpers, CueSelectionHelper, ERROR: broken cue {id}");
                         }
                     }
                 }
@@ -156,10 +156,10 @@ namespace enhancedKanerahRomance.modStructure
             }
         }
 
-        // builder: ShowCheck
+        // builder: ShowCheckHelper
         // create is ONLY used for the weird ShowCheck I don't think we will use, that makes an answer appear in list if you pass the check
         // but default is used in CreateOrModifyAnswer default, so keep this
-        public static class ShowCheckHandling
+        public static class ShowCheckHelper
         {
             public static ShowCheck Default()
             {
@@ -179,8 +179,8 @@ namespace enhancedKanerahRomance.modStructure
             }
         }
 
-        // builder: CharacterSelection
-        public static class CharacterSelectionHandling
+        // builder: CharacterSelectionHelper
+        public static class CharacterSelectionHelper
         {
             public static CharacterSelection Default()
             {
@@ -202,8 +202,8 @@ namespace enhancedKanerahRomance.modStructure
             }
         }
 
-        // builder: AlignmentShiftHandling
-        public static class AlignmentShiftHandling
+        // builder: AlignmentShiftHelper
+        public static class AlignmentShiftHelper
         {
             public static AlignmentShift Default()
             {
@@ -237,24 +237,24 @@ namespace enhancedKanerahRomance.modStructure
                 {
                     Direction = direction,
                     Value = value,
-                    Description = RegistrationHelpers.CreateString(descriptionKey, descriptionText)
+                    Description = MiscLocalizationAndRegistration.CreateString(descriptionKey, descriptionText)
                 };
             }
         }
 
         // builder: parent asset
-        public static BlueprintScriptableObject ParentAssetHandling(string parentAssetId)
+        public static BlueprintScriptableObject ParentAssetHelper(string parentAssetId)
         {
             if (string.IsNullOrEmpty(parentAssetId))
             {
-                Main.Log.Log("DialogueHelpers, ParentAssetHandling: ERROR: null? parentAssetId");
+                Main.Log.Log("DialogueHelpers, ParentAssetHelper: ERROR: null? parentAssetId");
                 return null;
             }
 
             var parent = ResourcesLibrary.TryGetBlueprint<BlueprintScriptableObject>(parentAssetId);
             if (parent == null)
             {
-                Main.Log.Log($"DialogueHelpers, ParentAssetHandling: ERROR: missing blueprint for parentAssetId");
+                Main.Log.Log($"DialogueHelpers, ParentAssetHelper: ERROR: missing blueprint for parentAssetId");
                 return null;
             }
 
@@ -263,7 +263,7 @@ namespace enhancedKanerahRomance.modStructure
 
         // builder: answer only update string
         // used in CreateOrModifyAnswer Modify only
-        public static void UpdateAnswerText(BlueprintAnswer answer, string newText)
+        public static void UpdateAnswerTextHelper(BlueprintAnswer answer, string newText)
         {
             if (answer == null)
             {
@@ -272,12 +272,12 @@ namespace enhancedKanerahRomance.modStructure
             }
             // Use the answer's existing AssetGuid to overwrite the localization string
             var key = answer.AssetGuid;
-            answer.Text = RegistrationHelpers.CreateString(key, newText);
+            answer.Text = MiscLocalizationAndRegistration.CreateString(key, newText);
         }
 
         // builder: cue only update string
         // used in CreateOrModifyCue Modify only
-        public static void UpdateCueText(BlueprintCue cue, string newText)
+        public static void UpdateCueTextHelper(BlueprintCue cue, string newText)
         {
             if (cue == null)
             {
@@ -287,7 +287,7 @@ namespace enhancedKanerahRomance.modStructure
 
             // Use the answer's existing AssetGuid to overwrite the localization string
             var key = cue.AssetGuid;
-            cue.Text = RegistrationHelpers.CreateString(key, newText);
+            cue.Text = MiscLocalizationAndRegistration.CreateString(key, newText);
         }
     }
 }

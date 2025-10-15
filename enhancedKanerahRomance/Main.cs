@@ -35,7 +35,7 @@ namespace enhancedKanerahRomance
                 try
                 {
                     // check for duplicates
-                    RegistrationHelpers.CheckDuplicateGUIDs();
+                    MiscLocalizationAndRegistration.CheckDuplicateGUIDs();
                 }
                 catch (Exception e)
                 {
@@ -49,12 +49,12 @@ namespace enhancedKanerahRomance
 
                 try
                 {
-                    TestCases.AddTestCases();
+                    DialogueTestCases.AddDialogueTestCases();
                     Log.Log("Main, HarmonyPatch: Test AddTestCases successfully loaded");
                     // FlirtOptions.AddDialogueFlirtOptions();
                     // Log.Log("Main, HarmonyPatch: FlirtOptions AddDialogue successfully loaded");
-                    RegistrationHelpers.DelayedBlueprintBuildHandling.Process();
-                    Log.Log("Main, HarmonyPatch: DelayedBlueprintHandling processed");
+                    MiscLocalizationAndRegistration.DelayedBlueprintBuild.Process();
+                    Log.Log("Main, HarmonyPatch: DelayedBlueprintBuild processed");
 
                 }
                 catch (Exception e)
