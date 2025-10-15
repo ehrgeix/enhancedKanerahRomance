@@ -27,50 +27,61 @@ namespace enhancedKanerahRomance.modStructure
         // Builder ActionList
         // we will likely have to add handling for specific different actionlists as we expand the mod
         // one could argue that this should be in DialogueHelpers, but still
-        // note BUILDING flags is in MiscBlueprintBuilder, this is just for unlocking and incrementing flags
-        // usually we only CreateOrModify full blueprints. ActionLists are sections of a blueprint, but it looks like they are used in a lot of places and we will need to modify them while preserving existing content, so...
+        // heavy wip
 
-        // builder
-        // WIP
-
-        public static ActionList CreateOrModifyActionList(
-            ActionList targetList,
+        // builder -- handles ACTIONS 
+        public static GameAction[] CreateOrModifyActions(
+            GameAction[] targetActions,
             SetupMode mode,
-            Action<List<GameAction>> configure // this is two sets of brackets because we are editing an actionslist inside something else
-            )
+            Action<List<GameAction>> configure
+        )
         {
-
-            ActionList workingList;
+            // Handle both create and modify modes
+            var actions = targetActions?.ToList() ?? new List<GameAction>();
 
             if (mode == SetupMode.Create)
             {
-                workingList = new ActionList { Actions = Array.Empty<GameAction>() };
-
-                var actions = new List<GameAction>();
-                configure?.Invoke(actions);
-                workingList.Actions = actions.ToArray();
-
-                return workingList;
+                actions.Clear();
             }
 
-            else // modify
-            {
+            configure?.Invoke(actions);
 
-                 workingList = targetList ?? new ActionList { Actions = Array.Empty<GameAction>() };
-
-                 var existing = workingList.Actions?.ToList() ?? new List<GameAction>();
-                 configure?.Invoke(existing);
-                 workingList.Actions = existing.ToArray();
-
-                 return workingList;
-
-            }
+            return actions.ToArray();
         }
 
+        // wrapper - calls CreateOrModifyActions, handles actionLISTS
+        public static ActionList CreateOrModifyActionList(
+            ActionList targetList,
+            SetupMode mode,
+            Action<List<GameAction>> configure
+        )
+        {
+            var existingActions = targetList?.Actions ?? Array.Empty<GameAction>();
 
+            var modifiedActions = CreateOrModifyActions(existingActions, mode, configure);
 
+            var workingList = targetList ?? new ActionList();
+            workingList.Actions = modifiedActions;
 
+            return workingList;
+        }
 
+        // Helper: wrap a GameAction or ActionList into an ActionAndWeight entry for RandomAction blocks
+        public static ActionAndWeight CreateWeightedAction(
+            GameAction innerAction,
+            int weight = 1,
+            ConditionsChecker conditions = null
+        )
+        {
+            return new ActionAndWeight
+            {
+                Weight = weight,
+                Conditions = conditions ?? new ConditionsChecker { Operation = Operation.And, Conditions = new Condition[0] }, // is this wrong - can we plug in our conditionschecker logic here?
+                Action = new ActionList { Actions = new[] { innerAction } }
+            };
+        }
 
     }
+
 }
+

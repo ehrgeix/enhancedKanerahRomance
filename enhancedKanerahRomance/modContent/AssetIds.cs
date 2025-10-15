@@ -16,6 +16,7 @@ namespace enhancedKanerahRomance.modContent
         public const string modifyNoMoreIntimate = "695d2f0b36c8a2446aba22c09f1e5dbb";
         public const string kanerahPortrait = "f1c0b181a534f4940ae17f243a5968ec";
         public const string aLWantToTalkToYouAboutWhatItMeansToBeATiefling = "32e8b78bc87dc944bb43612e97419b3f";
+        public const string twinsBlueprintDialog = "cc84ee93d2f328c48a7747e7e8e8a234";
 
         // Test case asset IDs
         public const string newTestCounterFlag = "11cdd5ef5beb4891b51ba9fd97f338a4";

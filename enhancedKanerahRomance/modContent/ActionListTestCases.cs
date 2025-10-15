@@ -40,59 +40,56 @@ namespace enhancedKanerahRomance.modContent
             return randomAction;
         }
 
-        // KANERAH BARK EDIT
+
         public static void AddActionListTestCases()
         {
-            // create actionList test
-            var newActionListTestCase1 = ActionListBlueprintBuilder.CreateOrModifyActionList(
-            targetList: null,
-            mode: SetupMode.Create,
-            configure: actions =>
-            {
-                // example call helpers
-                actions.AddRange(ActionListHelpers.FlagSet("GUID", 1).Actions); // setting to 1                                                              // actions.Add(new WHATEVER { });
-            }
+            // KANERAH BARK EDIT
+            // there's a lot of manual stuff here
+            // but we're not planning to edit people's barks often, so maybe this is fine?
+
+            // create bark dialogue, we use this later
+            var barkString = MiscLocalizationAndRegistration.CreateString(
+                key: AssetIds.newBarkString,
+                value: "TEST - DOES THIS WORK?"
             );
 
+            // Load the dialog blueprint (Kanerah bark)
+            var dialogBp = ResourcesLibrary.TryGetBlueprint<BlueprintDialog>(AssetIds.twinsBlueprintDialog);
 
-        
-            // Load the dialog blueprint
-            var dialogBp = ResourcesLibrary.TryGetBlueprint<BlueprintDialog>("cc84ee93d2f328c48a7747e7e8e8a234");
-
-            // Get the top-level ActionList
+            // Get the top-level ReplaceActions
             var topLevelActions = dialogBp.ReplaceActions;
 
-            // create barkstring
-            var barkString = MiscLocalizationAndRegistration.CreateString(
-            key: AssetIds.newBarkString,
-            value: "TEST - DOES THIS WORK?"
-            );
+            // Find the nested RandomAction block
+            var randomAction = GetNestedRandomAction(topLevelActions);
+            if (randomAction == null)
+            {
+                Main.Log.Log("Could not find nested RandomAction in Kanerah's ReplaceActions.");
+                return;
+            }
 
-            // Call CreateOrModifyActionList on the nested RandomAction
-            ActionListBlueprintBuilder.CreateOrModifyActionList(
-                targetList: GetNestedRandomAction(topLevelActions)?.Actions, // unsure if this should be ActionsList??? helper to get the ActionList inside RandomAction
-                mode: SetupMode.Modify, // we're modifying an existing list
-                configure: actions =>
+
+
+            // ✅ Build the new GameActions using your existing builder
+            var newWeightedAction = ActionListBlueprintBuilder.CreateWeightedAction(
+                new ShowBark
                 {
-                    // Add your new ShowBark actions
-                    actions.Add(new ShowBark
+                    WhatToBark = barkString,
+                    TargetUnit = new CompanionInParty
                     {
-                        WhatToBark = barkString,
-                        TargetUnit = new CompanionInParty
-                        {
-                            companion = ResourcesLibrary.TryGetBlueprint<BlueprintUnit>("f1c0b181a534f4940ae17f243a5968ec"),
-                            IncludeRemote = true,
-                            IncludeExCompanions = false,
-                            IncludeDettached = true
-                        }
-                    });
-
-                    // You can also add more helpers like FlagSet/FlagIncrement if needed:
-                    actions.AddRange(ActionListHelpers.FlagSet("flag_guid_1", 1).Actions);
+                        companion = ResourcesLibrary.TryGetBlueprint<BlueprintUnit>("f1c0b181a534f4940ae17f243a5968ec"),
+                        IncludeRemote = true,
+                        IncludeExCompanions = false,
+                        IncludeDettached = true
+                    }
                 }
             );
 
+            // ✅ Add it to the RandomAction’s Actions array
+            var existingActions = randomAction.Actions?.ToList() ?? new List<ActionAndWeight>();
+            existingActions.Add(newWeightedAction);
+            randomAction.Actions = existingActions.ToArray();
 
+            Main.Log.Log("Successfully added new ShowBark block into Kanerah RandomAction!");
         }
 
     }
