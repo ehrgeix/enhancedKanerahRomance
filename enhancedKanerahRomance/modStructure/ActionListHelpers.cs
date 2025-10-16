@@ -22,7 +22,7 @@ namespace enhancedKanerahRomance.modStructure
         {
             return new ActionList
             {
-                Actions = new Kingmaker.ElementsSystem.GameAction[0]
+                Actions = Array.Empty<GameAction>()
             };
         }
 

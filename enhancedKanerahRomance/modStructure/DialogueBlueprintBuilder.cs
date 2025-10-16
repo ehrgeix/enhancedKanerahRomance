@@ -68,7 +68,7 @@ namespace enhancedKanerahRomance.modStructure
                         cue.ShowOnce = false;
                         cue.ShowOnceCurrentDialog = false;
                         cue.Conditions = ConditionsCheckerHelpers.Default(); // Builder
-                        cue.Components = new BlueprintComponent[0]; // unknown, always blank?
+                        cue.Components = Array.Empty<BlueprintComponent>(); // unknown, always blank?
 
                         // configure cue
                         configure?.Invoke(cue);
@@ -148,11 +148,11 @@ namespace enhancedKanerahRomance.modStructure
                         answer.RequireValidCue = false; // always false
                         answer.AddToHistory = true; // always true
                         answer.OnSelect = ActionListHelpers.Default(); // Builder
-                        answer.FakeChecks = new CheckData[0]; // unknown, always blank?
+                        answer.FakeChecks = Array.Empty<CheckData>(); // unknown, always blank?
                         answer.AlignmentShift = DialogueHelpers.AlignmentShiftHelper.Default(); // Builder
                         answer.ParentAsset = null; // Builder
                         answer.AlignmentRequirement = AlignmentComponent.None;
-                        answer.Components = new BlueprintComponent[0]; // unknown, always blank?
+                        answer.Components = Array.Empty<BlueprintComponent>(); // unknown, always blank?
 
 
                         // configure answer before register
@@ -226,7 +226,7 @@ namespace enhancedKanerahRomance.modStructure
                         answersList.Answers = new List<BlueprintAnswerBase>(); // 
                         answersList.ParentAsset = null; // must be set in configure if create
                         answersList.AlignmentRequirement = AlignmentComponent.None; // TODO check this, defaults just say "None,"?
-                        answersList.Components = new BlueprintComponent[0];
+                        answersList.Components = Array.Empty<BlueprintComponent>();
 
                         // configure
                         configure?.Invoke(answersList);
@@ -295,7 +295,7 @@ namespace enhancedKanerahRomance.modStructure
                         check.Type = StatType.CheckIntimidate; // default, but this does NEED a type
                         check.DC = 20; // default, but this does NEED a dc
                         check.Hidden = false; // always false
-                        check.DCModifiers = new DCModifier[0]; // always empty array
+                        check.DCModifiers = Array.Empty<DCModifier>(); // always empty array
 
                         // success & failure nextCue handling
                         var cues = CheckAddSuccessFailCuesHelper.Create(successId, failId);
@@ -306,7 +306,7 @@ namespace enhancedKanerahRomance.modStructure
                         check.ShowOnce = false;
                         check.ShowOnceCurrentDialog = false;
                         check.Conditions = ConditionsCheckerHelpers.Default(); // Builder
-                        check.Components = new BlueprintComponent[0]; // unused?
+                        check.Components = Array.Empty<BlueprintComponent>(); // unused?
 
                         // configure
                         configure?.Invoke(check);
@@ -363,7 +363,7 @@ namespace enhancedKanerahRomance.modStructure
                         dialog.TurnPlayer = true;
                         dialog.TurnFirstSpeaker = true;
                         dialog.Type = DialogType.Common;
-                        dialog.Components = new BlueprintComponent[0]; // unknown, always blank?
+                        dialog.Components = Array.Empty<BlueprintComponent>(); // unknown, always blank?
 
 
                         // configure dialog before register

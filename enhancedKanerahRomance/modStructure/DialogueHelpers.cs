@@ -187,7 +187,7 @@ namespace enhancedKanerahRomance.modStructure
                 return new CharacterSelection
                 {
                     SelectionType = CharacterSelection.Type.Clear,
-                    ComparisonStats = new StatType[0]
+                    ComparisonStats = Array.Empty<StatType>()
                 };
             }
 

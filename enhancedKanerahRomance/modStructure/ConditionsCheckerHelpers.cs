@@ -31,7 +31,7 @@ namespace enhancedKanerahRomance.modStructure
                 return new ConditionsChecker
                 {
                     Operation = Operation.And,
-                    Conditions = new Condition[0]
+                    Conditions = Array.Empty<Condition>()
                 };
             }
             // TODO, FlagUnlocked - IMPROVE
