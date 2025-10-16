@@ -50,9 +50,11 @@ namespace enhancedKanerahRomance
                 try
                 {
                     DialogueTestCases.AddDialogueTestCases();
-                    Log.Log("Main, HarmonyPatch: Test AddDialogueTestCases successfully loaded");
+                    Log.Log("Main, HarmonyPatch: AddDialogueTestCases successfully loaded");
                     ActionListTestCases.AddActionListTestCases();
-                    Log.Log("Main, HarmonyPatch: Test AddActionListTestCases successfully loaded");
+                    Log.Log("Main, HarmonyPatch: AddActionListTestCases successfully loaded");
+                    CampingEncounterTestCases.AddCampingEncounterTestCases();
+                    Log.Log("Main, HarmonyPatch: AddCampingEncounterTestCases successfully loaded");
                     // FlirtOptions.AddDialogueFlirtOptions();
                     // Log.Log("Main, HarmonyPatch: FlirtOptions AddDialogue successfully loaded");
                     MiscLocalizationAndRegistration.DelayedBlueprintBuild.Process();

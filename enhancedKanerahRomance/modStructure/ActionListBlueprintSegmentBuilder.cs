@@ -21,7 +21,7 @@ using static enhancedKanerahRomance.modStructure.ActionListHelpers;
 
 namespace enhancedKanerahRomance.modStructure
 {
-    public static class ActionListBlueprintBuilder
+    public static class ActionListBlueprintSegmentBuilder
     {
 
         // Builder ActionList

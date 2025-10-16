@@ -13,7 +13,7 @@ using static enhancedKanerahRomance.modContent.AssetIds;
 using static enhancedKanerahRomance.modStructure.DialogueBlueprintBuilder;
 using static enhancedKanerahRomance.modStructure.DialogueHelpers;
 using static enhancedKanerahRomance.modStructure.ConditionsCheckerHelpers;
-using static enhancedKanerahRomance.modStructure.ActionListBlueprintBuilder;
+using static enhancedKanerahRomance.modStructure.ActionListBlueprintSegmentBuilder;
 using static enhancedKanerahRomance.modStructure.ActionListHelpers;
 using static enhancedKanerahRomance.modStructure.MiscBlueprintBuilder;
 using static enhancedKanerahRomance.modStructure.MiscLocalizationAndRegistration;
@@ -36,23 +36,23 @@ namespace enhancedKanerahRomance.modContent
                 speakerPortrait: null
                 );
 
-                var speakerKanerah2 = DialogueHelpers.SpeakerHelper.Create(
-                blueprint: ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(AssetIds.kanerahPortrait),
-                moveCamera: true,
-                checkDistance: true,
-                noSpeaker: false,
-                switchDual: true,
-                speakerPortrait: null
-                );
+            var speakerKanerah2 = DialogueHelpers.SpeakerHelper.Create(
+            blueprint: ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(AssetIds.kanerahPortrait),
+            moveCamera: true,
+            checkDistance: true,
+            noSpeaker: false,
+            switchDual: true,
+            speakerPortrait: null
+            );
 
-                var speakerKanerah3 = DialogueHelpers.SpeakerHelper.Create(
-                blueprint: null,
-                moveCamera: true,
-                checkDistance: true,
-                noSpeaker: false,
-                switchDual: false,
-                speakerPortrait: null
-                );
+            var speakerKanerah3 = DialogueHelpers.SpeakerHelper.Create(
+            blueprint: null,
+            moveCamera: true,
+            checkDistance: true,
+            noSpeaker: false,
+            switchDual: false,
+            speakerPortrait: null
+            );
 
 
             // END BLOCK OF VARIABLES FOR CUE USE
@@ -111,22 +111,22 @@ namespace enhancedKanerahRomance.modContent
             // create cue test 4
             var newCueTestCase4 = DialogueBlueprintBuilder.CreateOrModifyCue(
                 name: "newCueTestCase4",
-                text: "NEW CUE - TEST CASE 4. Transitions to cue 5",
+                text: "NEW CUE - TEST CASE 4. Transitions to cue 5. Also called by our camping encounter test case",
                 assetId: AssetIds.newCueTestCase4,
                 mode: SetupMode.Create,
                 configure: c =>
                 {
                     c.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswerTestCase4);
                     c.Speaker = speakerKanerah;
-                     c.Continue = DialogueHelpers.CueSelectionHelper.Create(
-                     new[] { AssetIds.newCueTestCase5 } );
+                    c.Continue = DialogueHelpers.CueSelectionHelper.Create(
+                    new[] { AssetIds.newCueTestCase5 });
                 }
             );
 
             // create cue test 5
             var newCueTestCase5 = DialogueBlueprintBuilder.CreateOrModifyCue(
                 name: "newCueTestCase5",
-                text: "NEW CUE - TEST CASE 5. Null speaker test",
+                text: "NEW CUE - TEST CASE 5. Null speaker test. Transitions back to newAnswersListTestCase1",
                 assetId: AssetIds.newCueTestCase5,
                 mode: SetupMode.Create,
                 configure: c =>
@@ -134,6 +134,7 @@ namespace enhancedKanerahRomance.modContent
                     c.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newCueTestCase4);
                     c.Speaker = null; // TODO check
                     c.Continue = DialogueHelpers.CueSelectionHelper.Default();
+                    c.Answers = DialogueHelpers.CueAddAnswersListHelper.Create(AssetIds.newAnswersListTestCase1);
                 }
             );
 
@@ -436,10 +437,38 @@ namespace enhancedKanerahRomance.modContent
                     al.Answers.Add(newAnswerTestCase1);
                     Main.Log.Log($"TestCases, ModifyAnswersList, added {newAnswerTestCase1.name} to {al.name}");
                 }
-                
+            );
+
+            // create an actionslist that will play romantic music, to use with our new dialog that's called by the camping encounter
+            var playRomanceMusicActionList = CreateOrModifyActionList(
+                null, // create new
+                SetupMode.Create,
+                actions =>
+                {
+                    actions.Add(new PlayCustomMusic
+                    {
+                        MusicEventStart = "RomanceScene_Play",
+                        MusicEventStop = "RomanceScene_Stop",
+                        name = "PlayCustomMusic" 
+                    });
+                });
+
+            // create a new dialog, that we will use to test camping encounter triggers
+            var newDialogForCampingEncounterTestCase1 = DialogueBlueprintBuilder.CreateOrModifyDialog(
+                name: "newDialogForCampingEncounterTestCase1",
+                assetId: AssetIds.newDialogForCampingEncounterTestCase1,
+                mode: SetupMode.Create,
+                configure: dialog =>
+                {
+                    dialog.FirstCue = DialogueHelpers.CueSelectionHelper.Create(
+                    new[] { AssetIds.newCueTestCase4 }
+                    );
+                    dialog.StartActions = playRomanceMusicActionList;
+                }
+            );
 
 
-);
+
 
 
 

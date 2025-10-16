@@ -48,6 +48,9 @@ namespace enhancedKanerahRomance.modContent
 
         public const string newLawfulShiftTestCase = "061cb70dcfac4c97876ae894c2f6d013";
 
+        public const string newDialogForCampingEncounterTestCase1 = "973bcaa1246f4ef28f42b1433eb771a7";
+        public const string newCampingEncounterTestCase1 = "5b9c2cfce9e14aeba0a278675a606985";
+
         // Test case asset IDs - ActionList
         public const string newBarkString1 = "467cd1afe7424922b0b6376117cee743";
         public const string newBarkString2 = "79ce97a33967407095fbc854cd2f83a4";

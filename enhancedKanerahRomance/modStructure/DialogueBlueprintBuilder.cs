@@ -11,7 +11,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static enhancedKanerahRomance.modStructure.DialogueHelpers;
 using static enhancedKanerahRomance.modStructure.ConditionsCheckerHelpers;
-using static enhancedKanerahRomance.modStructure.ActionListBlueprintBuilder;
+using static enhancedKanerahRomance.modStructure.ActionListBlueprintSegmentBuilder;
 using static enhancedKanerahRomance.modStructure.ActionListHelpers;
 using static enhancedKanerahRomance.modStructure.MiscLocalizationAndRegistration;
 using static UnityModManagerNet.UnityModManager.TextureReplacer.Skin;
@@ -354,7 +354,7 @@ namespace enhancedKanerahRomance.modStructure
                 {
                     try
                     {
-                        dialog.FirstCue = DialogueHelpers.CueSelectionHelper.Default(); // TODO, FIX, THIS HAS TO BE A NEW DIALOG FILE CALLED CUESELECTION
+                        dialog.FirstCue = DialogueHelpers.CueSelectionHelper.Default(); // TODO, check this works properly and doesn't require a cuesequence
                         dialog.StartPosition = null;
                         dialog.Conditions = ConditionsCheckerHelpers.Default(); // Builder
                         dialog.StartActions = ActionListHelpers.Default(); // Builder

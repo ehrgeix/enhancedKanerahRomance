@@ -16,7 +16,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using static enhancedKanerahRomance.modContent.AssetIds;
 using static enhancedKanerahRomance.modStructure.ConditionsCheckerHelpers;
-using static enhancedKanerahRomance.modStructure.ActionListBlueprintBuilder;
+using static enhancedKanerahRomance.modStructure.ActionListBlueprintSegmentBuilder;
 
 namespace enhancedKanerahRomance.modStructure
 {

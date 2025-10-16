@@ -13,7 +13,7 @@ using static enhancedKanerahRomance.modContent.AssetIds;
 using static enhancedKanerahRomance.modStructure.DialogueBlueprintBuilder;
 using static enhancedKanerahRomance.modStructure.DialogueHelpers;
 using static enhancedKanerahRomance.modStructure.ConditionsCheckerHelpers;
-using static enhancedKanerahRomance.modStructure.ActionListBlueprintBuilder;
+using static enhancedKanerahRomance.modStructure.ActionListBlueprintSegmentBuilder;
 using static enhancedKanerahRomance.modStructure.ActionListHelpers;
 using static enhancedKanerahRomance.modStructure.MiscBlueprintBuilder;
 using static enhancedKanerahRomance.modStructure.MiscLocalizationAndRegistration;
@@ -28,7 +28,7 @@ namespace enhancedKanerahRomance.modContent
         public static void AddActionListTestCases()
         {
             // KANERAH BARK EDIT
-            // there's a lot of manual stuff here
+            // there's a lot of manual stuff here, and we could probably develop more helpers to replace it
             // but we're not planning to edit people's barks often, so maybe this is fine?
 
             // create bark dialogues, we use these later
@@ -45,19 +45,16 @@ namespace enhancedKanerahRomance.modContent
             // load the dialog blueprint featuring Kanerah's bark
             var blueprintDialogTarget = ResourcesLibrary.TryGetBlueprint<BlueprintDialog>(AssetIds.twinsBlueprintDialog);
 
-            // get the relevant actionList (in this case from ReplaceActions)
-            var replaceActionsSection = blueprintDialogTarget.ReplaceActions;
-
-            // get the relevant subsection of the actionList
-            var randomAction = ActionListHelpers.GetNestedRandomAction(replaceActionsSection);
+            // find the randomaction we're replacing inside the relevant subsection of this blueprint
+            var randomAction = ActionListHelpers.FindFirstActionOfType<RandomAction>(blueprintDialogTarget.ReplaceActions);
             if (randomAction == null)
             {
                 Main.Log.Log("ActionListTestCases, AddActionListTestCases, ERROR: can't find randomActions");
                 return;
             }
 
-            // call builder to create new section of actionList x1
-            var newWeightedAction1 = ActionListBlueprintBuilder.CreateWeightedAction(
+            // call builder to create new section of actionList (first)
+            var newWeightedAction1 = ActionListBlueprintSegmentBuilder.CreateWeightedAction(
                 new ShowBark
                 {
                     WhatToBark = barkString,
@@ -71,9 +68,9 @@ namespace enhancedKanerahRomance.modContent
                 }
             );
 
-            // call builder to create new section of actionList x2
+            // call builder to create new section of actionList (again)
             // this one is the same but only shows w flag set (by answer 7 testcase)
-            var newWeightedAction2 = ActionListBlueprintBuilder.CreateWeightedAction(
+            var newWeightedAction2 = ActionListBlueprintSegmentBuilder.CreateWeightedAction(
                 new ShowBark
                 {
                     WhatToBark = barkString2,
@@ -89,7 +86,7 @@ namespace enhancedKanerahRomance.modContent
                 conditions: ConditionsCheckerHelpers.FlagUnlocked(AssetIds.newTestUnlockedFlag)
             );
 
-            // add the new section we just created to the randomAction array
+            // add the new section we just created to the randomAction array in the actionlist
             var existingActions = randomAction.Actions?.ToList() ?? new List<ActionAndWeight>();
             existingActions.Add(newWeightedAction1);
             existingActions.Add(newWeightedAction2);

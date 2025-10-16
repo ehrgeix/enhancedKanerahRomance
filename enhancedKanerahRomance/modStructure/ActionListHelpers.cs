@@ -55,20 +55,31 @@ namespace enhancedKanerahRomance.modStructure
         }
 
         // KANERAH BARK EDIT ONLY
-        public static RandomAction GetNestedRandomAction(ActionList baseList)
+        // only digs into conditionals
+        // could potentially be expanded later
+        // (her bark is accessed via conditional true, conditional true, randomaction)
+        public static T FindFirstActionOfType<T>(ActionList list) where T : GameAction
         {
-            // check we got the actionlist and it has actions in
-            if (baseList?.Actions == null || baseList.Actions.Length == 0) return null;
+            if (list?.Actions == null) return null;
 
-            // this only works for Kanerah's blueprintDialog actionList specifically
-            // we are adding a bark. these are accessed via conditional true, conditional true, randomaction
-            // there MUST be a better way to do this
-            var stepOneConditional = baseList.Actions[0] as Conditional;
-            var stepTwoConditional = stepOneConditional?.IfTrue.Actions[0] as Conditional;
-            var randomAction = stepTwoConditional?.IfTrue.Actions[0] as RandomAction;
+            foreach (var action in list.Actions)
+            {
+                // if it's the right type, return it
+                if (action is T match)
+                    return match;
 
-            return randomAction;
+                // if it's a conditional, search true/false
+                if (action is Conditional conditional)
+                {
+                    var found = FindFirstActionOfType<T>(conditional.IfTrue);
+                    if (found != null) return found;
+
+                    found = FindFirstActionOfType<T>(conditional.IfFalse);
+                    if (found != null) return found;
+                }
+            }
+
+            return null;
         }
-
     }
 }
