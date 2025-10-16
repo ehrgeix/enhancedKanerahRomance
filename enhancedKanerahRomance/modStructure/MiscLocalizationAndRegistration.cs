@@ -35,6 +35,7 @@ namespace enhancedKanerahRomance.modStructure
 
         // RegisterBlueprint helper, registers a BlueprintScriptableObject globally in Kingmaker by appending it to Kingmaker.Blueprints.LibraryScriptableObject m_AllBlueprints
         // it's ALSO registered in LibraryObject.BlueprintsByAssetId
+        // ADDB did most of this thank god
         public static void RegisterBlueprint(BlueprintScriptableObject bp, string assetId)
         {
             try

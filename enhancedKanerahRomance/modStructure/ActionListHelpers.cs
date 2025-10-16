@@ -54,5 +54,21 @@ namespace enhancedKanerahRomance.modStructure
             };
         }
 
+        // KANERAH BARK EDIT ONLY
+        public static RandomAction GetNestedRandomAction(ActionList baseList)
+        {
+            // check we got the actionlist and it has actions in
+            if (baseList?.Actions == null || baseList.Actions.Length == 0) return null;
+
+            // this only works for Kanerah's blueprintDialog actionList specifically
+            // we are adding a bark. these are accessed via conditional true, conditional true, randomaction
+            // there MUST be a better way to do this
+            var stepOneConditional = baseList.Actions[0] as Conditional;
+            var stepTwoConditional = stepOneConditional?.IfTrue.Actions[0] as Conditional;
+            var randomAction = stepTwoConditional?.IfTrue.Actions[0] as RandomAction;
+
+            return randomAction;
+        }
+
     }
 }

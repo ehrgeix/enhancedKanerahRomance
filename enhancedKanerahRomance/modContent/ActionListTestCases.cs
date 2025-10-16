@@ -25,58 +25,45 @@ namespace enhancedKanerahRomance.modContent
 {
     internal class ActionListTestCases
     {
-
-
-        // KANERAH BARK EDIT
-        public static RandomAction GetNestedRandomAction(ActionList topLevel)
-        {
-            if (topLevel?.Actions == null || topLevel.Actions.Length == 0) return null;
-
-            // Drill down: top-level conditional → second-level conditional → random action
-            var firstConditional = topLevel.Actions[0] as Conditional;
-            var secondConditional = firstConditional?.IfTrue.Actions[0] as Conditional;
-            var randomAction = secondConditional?.IfTrue.Actions[0] as RandomAction;
-
-            return randomAction;
-        }
-
-
         public static void AddActionListTestCases()
         {
             // KANERAH BARK EDIT
             // there's a lot of manual stuff here
             // but we're not planning to edit people's barks often, so maybe this is fine?
 
-            // create bark dialogue, we use this later
+            // create bark dialogues, we use these later
             var barkString = MiscLocalizationAndRegistration.CreateString(
-                key: AssetIds.newBarkString,
+                key: AssetIds.newBarkString1,
                 value: "TEST - DOES THIS WORK?"
             );
 
-            // Load the dialog blueprint (Kanerah bark)
-            var dialogBp = ResourcesLibrary.TryGetBlueprint<BlueprintDialog>(AssetIds.twinsBlueprintDialog);
+            var barkString2 = MiscLocalizationAndRegistration.CreateString(
+            key: AssetIds.newBarkString2,
+            value: "TEST - DOES THIS WORK? SECOND EDIT"
+);
 
-            // Get the top-level ReplaceActions
-            var topLevelActions = dialogBp.ReplaceActions;
+            // load the dialog blueprint featuring Kanerah's bark
+            var blueprintDialogTarget = ResourcesLibrary.TryGetBlueprint<BlueprintDialog>(AssetIds.twinsBlueprintDialog);
 
-            // Find the nested RandomAction block
-            var randomAction = GetNestedRandomAction(topLevelActions);
+            // get the relevant actionList (in this case from ReplaceActions)
+            var replaceActionsSection = blueprintDialogTarget.ReplaceActions;
+
+            // get the relevant subsection of the actionList
+            var randomAction = ActionListHelpers.GetNestedRandomAction(replaceActionsSection);
             if (randomAction == null)
             {
-                Main.Log.Log("Could not find nested RandomAction in Kanerah's ReplaceActions.");
+                Main.Log.Log("ActionListTestCases, AddActionListTestCases, ERROR: can't find randomActions");
                 return;
             }
 
-
-
-            // ✅ Build the new GameActions using your existing builder
-            var newWeightedAction = ActionListBlueprintBuilder.CreateWeightedAction(
+            // call builder to create new section of actionList x1
+            var newWeightedAction1 = ActionListBlueprintBuilder.CreateWeightedAction(
                 new ShowBark
                 {
                     WhatToBark = barkString,
                     TargetUnit = new CompanionInParty
                     {
-                        companion = ResourcesLibrary.TryGetBlueprint<BlueprintUnit>("f1c0b181a534f4940ae17f243a5968ec"),
+                        companion = ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(AssetIds.kanerahCompanion),
                         IncludeRemote = true,
                         IncludeExCompanions = false,
                         IncludeDettached = true
@@ -84,12 +71,31 @@ namespace enhancedKanerahRomance.modContent
                 }
             );
 
-            // ✅ Add it to the RandomAction’s Actions array
+            // call builder to create new section of actionList x2
+            // this one is the same but only shows w flag set (by answer 7 testcase)
+            var newWeightedAction2 = ActionListBlueprintBuilder.CreateWeightedAction(
+                new ShowBark
+                {
+                    WhatToBark = barkString2,
+                    TargetUnit = new CompanionInParty
+                    {
+                        companion = ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(AssetIds.kanerahCompanion),
+                        IncludeRemote = true,
+                        IncludeExCompanions = false,
+                        IncludeDettached = true
+                    }
+                },
+                // only show if flag from testcase 7 set
+                conditions: ConditionsCheckerHelpers.FlagUnlocked(AssetIds.newTestUnlockedFlag)
+            );
+
+            // add the new section we just created to the randomAction array
             var existingActions = randomAction.Actions?.ToList() ?? new List<ActionAndWeight>();
-            existingActions.Add(newWeightedAction);
+            existingActions.Add(newWeightedAction1);
+            existingActions.Add(newWeightedAction2);
             randomAction.Actions = existingActions.ToArray();
 
-            Main.Log.Log("Successfully added new ShowBark block into Kanerah RandomAction!");
+            Main.Log.Log("ActionListTestCases, AddActionListTestCases, KanerahBark edit complete");
         }
 
     }

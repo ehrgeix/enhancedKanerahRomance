@@ -314,7 +314,7 @@ namespace enhancedKanerahRomance.modContent
             // create answer 7
             var newAnswerTestCase7 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
                 name: "newAnswerTestCase7",
-                text: "NEW TEST ANSWER TEST CASE 7. Unlocks flag with flagset helper, flag has to be created in separate variable earlier",
+                text: "NEW TEST ANSWER TEST CASE 7. Unlocks flag with flagset helper, flag has to be created in separate variable earlier. This should display answer 8 AND barkstring 2 (post-coitus)",
                 assetId: AssetIds.newAnswerTestCase7,
                 mode: SetupMode.Create,
                 configure: a =>

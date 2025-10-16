@@ -17,6 +17,7 @@ namespace enhancedKanerahRomance.modContent
         public const string kanerahPortrait = "f1c0b181a534f4940ae17f243a5968ec";
         public const string aLWantToTalkToYouAboutWhatItMeansToBeATiefling = "32e8b78bc87dc944bb43612e97419b3f";
         public const string twinsBlueprintDialog = "cc84ee93d2f328c48a7747e7e8e8a234";
+        public const string kanerahCompanion = "f1c0b181a534f4940ae17f243a5968ec";
 
         // Test case asset IDs
         public const string newTestCounterFlag = "11cdd5ef5beb4891b51ba9fd97f338a4";
@@ -48,7 +49,8 @@ namespace enhancedKanerahRomance.modContent
         public const string newLawfulShiftTestCase = "061cb70dcfac4c97876ae894c2f6d013";
 
         // Test case asset IDs - ActionList
-        public const string newBarkString = "467cd1afe7424922b0b6376117cee743";
+        public const string newBarkString1 = "467cd1afe7424922b0b6376117cee743";
+        public const string newBarkString2 = "79ce97a33967407095fbc854cd2f83a4";
     }
 
 }
