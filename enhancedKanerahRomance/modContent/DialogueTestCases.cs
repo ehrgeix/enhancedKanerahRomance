@@ -111,7 +111,7 @@ namespace enhancedKanerahRomance.modContent
             // create cue test 4
             var newCueTestCase4 = DialogueBlueprintBuilder.CreateOrModifyCue(
                 name: "newCueTestCase4",
-                text: "NEW CUE - TEST CASE 4. Transitions to cue 5. Also called by our camping encounter test case",
+                text: "NEW CUE - TEST CASE 4. Transitions to cue 5.",
                 assetId: AssetIds.newCueTestCase4,
                 mode: SetupMode.Create,
                 configure: c =>
@@ -162,6 +162,20 @@ namespace enhancedKanerahRomance.modContent
                 {
                     c.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newCheckTestCase1);
                     c.Speaker = speakerKanerah;
+                    c.Continue = DialogueHelpers.CueSelectionHelper.Default();
+                }
+            );
+
+            // create cue test 8
+            var newCueTestCase8 = DialogueBlueprintBuilder.CreateOrModifyCue(
+                name: "newCueTestCase8",
+                text: "NEW CUE - TEST CASE 8. called by campingEncounterTestCase",
+                assetId: AssetIds.newCueTestCase8,
+                mode: SetupMode.Create,
+                configure: c =>
+                {
+                    c.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newDialogForCampingEncounterTestCase1);
+                    c.Speaker = speakerKanerah2;
                     c.Continue = DialogueHelpers.CueSelectionHelper.Default();
                 }
             );
@@ -233,7 +247,7 @@ namespace enhancedKanerahRomance.modContent
             // create answer 2
             var newAnswerTestCase2 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
                 name: "newAnswerTestCase2", // name
-                text: "NEW TEST ANSWER TEST CASE 2. ShowOnce = true", // text
+                text: "NEW TEST ANSWER TEST CASE 2. ShowOnce = true. ADDS CAMPING ENCOUNTER TEST", // text
                 assetId: AssetIds.newAnswerTestCase2,
                 mode: SetupMode.Create,
                 configure: a =>
@@ -244,6 +258,8 @@ namespace enhancedKanerahRomance.modContent
 
                     a.ShowOnce = true;
                     a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase1);
+                    a.OnSelect = ActionListHelpers.AddCampingEncounter(AssetIds.newCampingEncounterTestCase1);
+
                 }
             );
 
@@ -461,7 +477,7 @@ namespace enhancedKanerahRomance.modContent
                 configure: dialog =>
                 {
                     dialog.FirstCue = DialogueHelpers.CueSelectionHelper.Create(
-                    new[] { AssetIds.newCueTestCase4 }
+                    new[] { AssetIds.newCueTestCase8 }
                     );
                     dialog.StartActions = playRomanceMusicActionList;
                 }

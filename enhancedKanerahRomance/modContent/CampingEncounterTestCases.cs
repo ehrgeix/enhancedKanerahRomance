@@ -29,6 +29,8 @@ namespace enhancedKanerahRomance.modContent
         public static void AddCampingEncounterTestCases()
         {
 
+
+
             var newCampingEncounterTestCase1 = CampingEncounterBlueprintBuilder.CreateOrModifyCampingEncounter(
                 name: "newCampingEncounterTestCase1",
                 assetId: AssetIds.newCampingEncounterTestCase1,
@@ -36,9 +38,23 @@ namespace enhancedKanerahRomance.modContent
                 configure: campingencounter =>
                 {
                     // only proc if flag set by answer 7 is active
-                    campingencounter.Conditions = ConditionsCheckerBlueprintSegmentBuilder.CombineConditionsCheckers(
-                        ConditionsCheckerHelpers.FlagUnlocked(AssetIds.newTestUnlockedFlag),
-                        ConditionsCheckerHelpers.CompanionInParty(AssetIds.kanerahCompanion)
+                     campingencounter.Conditions = ConditionsCheckerBlueprintSegmentBuilder.CombineConditionsCheckers(
+                         ConditionsCheckerHelpers.FlagUnlocked(AssetIds.newTestUnlockedFlag),
+                         ConditionsCheckerHelpers.CompanionInParty(AssetIds.kanerahCompanion)
+                         );
+
+                    // start dialogue
+                    campingencounter.EncounterActions = ActionListBlueprintSegmentBuilder.CreateOrModifyActionList(
+                        campingencounter.EncounterActions,
+                        SetupMode.Create,
+                        actions =>
+                        {
+                        actions.Add(ActionListHelpers.StartDialog(
+                        companionName: "CompanionInParty",
+                        companionGuid: AssetIds.kanerahCompanion,
+                        dialogName: "StartDialog",
+                        dialogGuid: AssetIds.newDialogForCampingEncounterTestCase1));
+                        }
                         );
                 }
                 );

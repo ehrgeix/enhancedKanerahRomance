@@ -1,7 +1,10 @@
 ﻿using Kingmaker.Blueprints;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
 using Kingmaker.Designers.EventConditionActionSystem.Evaluators;
+using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.ElementsSystem;
+using Kingmaker.Globalmap.Blueprints;
+using Kingmaker.Localization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -80,6 +83,46 @@ namespace enhancedKanerahRomance.modStructure
             }
 
             return null;
+        }
+
+        // start dialogue helper, calls a blueprintDialog, used in camping encounters etc
+        // returns actions ONLY, not the full list - needs wrapping
+        public static StartDialog StartDialog(string dialogGuid, string dialogName, string companionGuid, string companionName)
+        {
+            // set up companion
+            var companionInParty = ScriptableObject.CreateInstance<CompanionInParty>();
+            companionInParty.companion = ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(companionGuid);
+            companionInParty.IncludeRemote = false;
+            companionInParty.IncludeExCompanions = false;
+            companionInParty.IncludeDettached = false;
+            companionInParty.name = dialogName;
+
+            // set up dialog started by this companion
+            var startDialog = ScriptableObject.CreateInstance<StartDialog>();
+            startDialog.DialogueOwner = companionInParty;
+            startDialog.Dialogue = ResourcesLibrary.TryGetBlueprint<BlueprintDialog>(dialogGuid);
+            startDialog.name = companionName;
+
+            return startDialog;
+        }
+
+        //add campingencounter
+        public static ActionList AddCampingEncounter(string encounterGuid)
+        {
+            var encounter = ResourcesLibrary.TryGetBlueprint<BlueprintCampingEncounter>(encounterGuid);
+            if (encounter == null)
+            {
+                Main.Log.Log("AddCampingEncounter ERROR: Encounter not found");
+                return Default();
+            }
+
+            var addEncounter = ScriptableObject.CreateInstance<Kingmaker.Designers.EventConditionActionSystem.Actions.AddCampingEncounter>();
+            addEncounter.Encounter = encounter;
+
+            return new ActionList
+            {
+                Actions = new GameAction[] { addEncounter }
+            };
         }
     }
 }

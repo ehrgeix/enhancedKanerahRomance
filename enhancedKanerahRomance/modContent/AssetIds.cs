@@ -30,6 +30,7 @@ namespace enhancedKanerahRomance.modContent
         public const string newCueTestCase5 = "df0bf3446c9c4373941141424ec4db4f";
         public const string newCueTestCase6Success = "605695a03ccf48c783b54e7f9ad987a4";
         public const string newCueTestCase7Fail = "242b48fc5fd54459a5872860b13fc2b8";
+        public const string newCueTestCase8 = "8e1a29658b3049ffb4e132585d9793b3";
 
         public const string newCheckTestCase1 = "268ce569ebca4f9cae34af309475c73c";
 

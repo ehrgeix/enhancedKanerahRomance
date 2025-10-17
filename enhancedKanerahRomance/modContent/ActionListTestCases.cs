@@ -2,24 +2,25 @@
 using Kingmaker.AreaLogic.Cutscenes.Commands;
 using Kingmaker.Blueprints;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
+using Kingmaker.Designers.EventConditionActionSystem.Evaluators;
 using Kingmaker.DialogSystem.Blueprints;
 using Kingmaker.ElementsSystem;
 using Kingmaker.EntitySystem.Stats;
 using Kingmaker.Enums;
+using Kingmaker.Globalmap.Blueprints;
+using Kingmaker.Localization;
 using Kingmaker.UnitLogic.Alignments;
 using System.Collections.Generic;
 using UnityEngine;
 using static enhancedKanerahRomance.modContent.AssetIds;
-using static enhancedKanerahRomance.modStructure.DialogueBlueprintBuilder;
-using static enhancedKanerahRomance.modStructure.DialogueHelpers;
-using static enhancedKanerahRomance.modStructure.ConditionsCheckerHelpers;
 using static enhancedKanerahRomance.modStructure.ActionListBlueprintSegmentBuilder;
 using static enhancedKanerahRomance.modStructure.ActionListHelpers;
+using static enhancedKanerahRomance.modStructure.ConditionsCheckerHelpers;
+using static enhancedKanerahRomance.modStructure.DialogueBlueprintBuilder;
+using static enhancedKanerahRomance.modStructure.DialogueHelpers;
+using static enhancedKanerahRomance.modStructure.Globals;
 using static enhancedKanerahRomance.modStructure.MiscBlueprintBuilder;
 using static enhancedKanerahRomance.modStructure.MiscLocalizationAndRegistration;
-using static enhancedKanerahRomance.modStructure.Globals;
-using Kingmaker.Localization;
-using Kingmaker.Designers.EventConditionActionSystem.Evaluators;
 
 namespace enhancedKanerahRomance.modContent
 {
@@ -93,7 +94,7 @@ namespace enhancedKanerahRomance.modContent
             randomAction.Actions = existingActions.ToArray();
 
             Main.Log.Log("ActionListTestCases, AddActionListTestCases, KanerahBark edit complete");
-        }
 
+        }
     }
 }
