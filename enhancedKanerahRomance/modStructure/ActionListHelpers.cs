@@ -17,8 +17,7 @@ namespace enhancedKanerahRomance.modStructure
     internal class ActionListHelpers
     {
         // HELPERS
-        // if we just need a really simple ActionList as part of an answer (or whatever), it's fine to call these directly
-        // otherwise, we should build anything more complicated with ActionListBlueprintBuilder.CreateOrModifyActionList
+        // except empty ActionList, these should all return Actions to be handled by CombineActionsIntoActionList or similar
 
         // return empty ActionList
         public static ActionList Default()
@@ -29,38 +28,10 @@ namespace enhancedKanerahRomance.modStructure
             };
         }
 
-        // "unlock" a flag (I think this sets from 0 to 1?)
-        public static ActionList FlagSet(string flagGuid, int value)
-        {
-            var setFlag = ScriptableObject.CreateInstance<UnlockFlag>();
-            setFlag.flag = ResourcesLibrary.TryGetBlueprint<BlueprintUnlockableFlag>(flagGuid);
-            setFlag.flagValue = value;
-
-            return new ActionList
-            {
-                Actions = new[] { setFlag }
-            };
-        }
-
-        // increment a flag
-        public static ActionList FlagIncrement(string flagGuid, int amount)
-        {
-            var flag = ResourcesLibrary.TryGetBlueprint<BlueprintUnlockableFlag>(flagGuid);
-
-            var increment = ScriptableObject.CreateInstance<IncrementFlagValue>();
-            increment.Flag = flag;
-            increment.Value = new IntConstant { Value = amount, name = $"$IntConstant_{flagGuid}" };
-
-            return new ActionList
-            {
-                Actions = new[] { increment }
-            };
-        }
-
-        // KANERAH BARK EDIT ONLY
+        // KANERAH BARK EDIT ONLY - find actionsList to hit inside a blueprintDialog 
         // only digs into conditionals
-        // could potentially be expanded later
         // (her bark is accessed via conditional true, conditional true, randomaction)
+        // could be expanded/refactored later if needed
         public static T FindFirstActionOfType<T>(ActionList list) where T : GameAction
         {
             if (list?.Actions == null) return null;
@@ -85,9 +56,33 @@ namespace enhancedKanerahRomance.modStructure
             return null;
         }
 
+        // "unlock" a flag (I think this sets from 0 to 1?)
+        public static GameAction FlagSet(string flagGuid, int value)
+        {
+            var setFlag = ScriptableObject.CreateInstance<UnlockFlag>();
+            setFlag.flag = ResourcesLibrary.TryGetBlueprint<BlueprintUnlockableFlag>(flagGuid);
+            setFlag.flagValue = value;
+
+            return setFlag;
+        }
+
+        // increment a flag
+        public static GameAction FlagIncrement(string flagGuid, int amount)
+        {
+            var flag = ResourcesLibrary.TryGetBlueprint<BlueprintUnlockableFlag>(flagGuid);
+
+            var increment = ScriptableObject.CreateInstance<IncrementFlagValue>();
+            increment.Flag = flag;
+            increment.Value = new IntConstant { Value = amount, name = $"$IntConstant_{flagGuid}" };
+
+            return increment;
+        }
+
         // start dialogue helper, calls a blueprintDialog, used in camping encounters etc
-        // returns actions ONLY, not the full list - needs wrapping
-        public static StartDialog StartDialog(string dialogGuid, string dialogName, string companionGuid, string companionName)
+        public static GameAction StartDialog(string dialogGuid, 
+            string companionGuid, 
+            string dialogName = "StartDialog", 
+            string companionName = "CompanionInParty")
         {
             // set up companion
             var companionInParty = ScriptableObject.CreateInstance<CompanionInParty>();
@@ -106,23 +101,44 @@ namespace enhancedKanerahRomance.modStructure
             return startDialog;
         }
 
-        //add campingencounter
-        public static ActionList AddCampingEncounter(string encounterGuid)
+        // add campingencounter
+        public static GameAction AddCampingEncounter(string encounterGuid)
         {
             var encounter = ResourcesLibrary.TryGetBlueprint<BlueprintCampingEncounter>(encounterGuid);
             if (encounter == null)
             {
-                Main.Log.Log("AddCampingEncounter ERROR: Encounter not found");
-                return Default();
+                Main.Log.Log("ActionListHelpers, AddCampingEncounter ERROR: encounter not found");
             }
 
             var addEncounter = ScriptableObject.CreateInstance<Kingmaker.Designers.EventConditionActionSystem.Actions.AddCampingEncounter>();
             addEncounter.Encounter = encounter;
 
-            return new ActionList
+            return addEncounter;
+        }
+
+        // remove campingencounter
+        public static GameAction RemoveCampingEncounter(string encounterGuid)
+        {
+            var encounter = ResourcesLibrary.TryGetBlueprint<BlueprintCampingEncounter>(encounterGuid);
+            if (encounter == null)
             {
-                Actions = new GameAction[] { addEncounter }
-            };
+                Main.Log.Log("ActionListHelpers, RemoveCampingEncounter ERROR: encounter not found");
+            }
+
+            var removeEncounter = ScriptableObject.CreateInstance<Kingmaker.Designers.EventConditionActionSystem.Actions.RemoveCampingEncounter>();
+            removeEncounter.Encounter = encounter;
+
+            return removeEncounter;
+        }
+
+        // play romancemusic
+        public static GameAction PlayRomanceMusic()
+        {
+            var playMusic = ScriptableObject.CreateInstance<PlayCustomMusic>();
+            playMusic.MusicEventStart = "RomanceScene_Play";
+            playMusic.MusicEventStop = "RomanceScene_Stop";
+            playMusic.name = "PlayRomanceMusic";
+            return playMusic;
         }
     }
 }

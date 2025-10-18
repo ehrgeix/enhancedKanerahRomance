@@ -84,7 +84,9 @@ namespace enhancedKanerahRomance.modContent
                     }
                 },
                 // only show if flag from testcase 7 set
-                conditions: ConditionsCheckerHelpers.FlagUnlocked(AssetIds.newTestUnlockedFlag)
+                conditions: ConditionsCheckerBlueprintSegmentBuilder.WrapAndOrCombineConditionsCheckers(
+                    ConditionsCheckerHelpers.FlagUnlocked(AssetIds.newTestUnlockedFlag)
+                    )
             );
 
             // add the new section we just created to the randomAction array in the actionlist

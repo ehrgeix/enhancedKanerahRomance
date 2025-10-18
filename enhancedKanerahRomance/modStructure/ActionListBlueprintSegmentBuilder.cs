@@ -18,6 +18,7 @@ using static enhancedKanerahRomance.modContent.AssetIds;
 using static Kingmaker.UnitLogic.Mechanics.Conditions.ContextConditionCompareTargetHP;
 using static enhancedKanerahRomance.modStructure.Globals;
 using static enhancedKanerahRomance.modStructure.ActionListHelpers;
+using UnityEngine.Experimental.XR;
 
 namespace enhancedKanerahRomance.modStructure
 {
@@ -25,10 +26,49 @@ namespace enhancedKanerahRomance.modStructure
     {
 
         // Builder ActionList
-        // plan: CreateOrModifyActions handles most of our ActionList manipulation
-        // CreateOrModifyActionLIST wraps the actions into a list if needed
+        // we refactored this stuff a LOT. disaster.
 
-        // primary builder -- handles ACTIONS 
+        // combine actions into an actionList. it turns out that generally this is all we need, we just make helpers as needed
+        public static ActionList WrapAndOrCombineActionsIntoActionList(params GameAction[] actions)
+        {
+            if (actions == null)
+            {
+                Main.Log.Log("ActionListBlueprintSegmentBuilder, CombineActionsIntoActionList ERROR: actions null");
+            }
+
+            return new ActionList
+            {
+                Actions = actions
+            };
+        }
+
+        // builder/helper/wrapper - creates weightedActions section of an ActionList
+        // basically this takes an action and surrounds it with weight and conditions
+        // potential rename - WrapWeightAndConditionsAroundActionList?
+        // it IS important / prob. needs to be separate from WrapAndOrCombineActions... etc
+        public static ActionAndWeight CreateWeightedAction(
+            GameAction weightedActionBuild,
+            int weight = 1,
+            ConditionsChecker conditions = null // default null
+        )
+        {
+            return new ActionAndWeight
+            {
+                Weight = weight,
+                Conditions = conditions ?? ConditionsCheckerHelpers.Default(), // null is then the default empty conditionschecker. we can pass an alternative if we desire though
+
+                Action = new ActionList
+                {
+                    Actions = new[]
+                    {
+                weightedActionBuild
+            }
+                }
+            };
+        }
+
+        /*
+        // depreciated (???) builder -- handles ACTIONS 
         public static GameAction[] CreateOrModifyActions(
             GameAction[] targetActions,
             SetupMode mode,
@@ -43,14 +83,14 @@ namespace enhancedKanerahRomance.modStructure
             {
                 actions.Clear();
             }
-                configure?.Invoke(actions);
+            configure?.Invoke(actions);
 
             // this converts the list back to an array, NOT a full actionsList, and returns it
-            return actions.ToArray(); 
+            return actions.ToArray();
         }
 
         // secondary builder/wrapper - calls CreateOrModifyActions, handles actionLISTS
-        // TODO
+        // also depreciated???
         public static ActionList CreateOrModifyActionList(
             ActionList targetList,
             SetupMode mode,
@@ -73,29 +113,24 @@ namespace enhancedKanerahRomance.modStructure
             return workingList;
         }
 
-        // builder/helper/wrapper - creates weightedActions section of an ActionList
-        // basically this takes an action and surrounds it with weight and conditions
-        public static ActionAndWeight CreateWeightedAction(
-            GameAction weightedActionBuild,
-            int weight = 1,
-            ConditionsChecker conditions = null // default null
-        )
-        {
-            return new ActionAndWeight
+        // example old use case for this stuff, from camping encounters, before we refactored this into a helper
+        // and basically if we're ever writing stuff like this why not write a helper???
+
+        
+        // start dialogue
+        campingencounter.EncounterActions = ActionListBlueprintSegmentBuilder.CreateOrModifyActionList(
+            campingencounter.EncounterActions,
+            SetupMode.Create,
+            actions =>
             {
-                Weight = weight,
-                Conditions = conditions ?? ConditionsCheckerHelpers.Default(), // null is then the default empty conditionschecker. we can pass an alternative if we desire though
-
-                Action = new ActionList 
-                { 
-                    Actions = new[] 
-                    {
-                        weightedActionBuild 
-                    } 
-                }
-            };
-        }
-
+            actions.Add(ActionListHelpers.StartDialog(
+            companionName: "CompanionInParty",
+            companionGuid: AssetIds.kanerahCompanion,
+            dialogName: "StartDialog",
+            dialogGuid: AssetIds.newDialogForCampingEncounterTestCase1));
+            }
+            );
+            */
     }
 
 }

@@ -13,6 +13,7 @@ using static enhancedKanerahRomance.modContent.AssetIds;
 using static enhancedKanerahRomance.modStructure.DialogueBlueprintBuilder;
 using static enhancedKanerahRomance.modStructure.DialogueHelpers;
 using static enhancedKanerahRomance.modStructure.ConditionsCheckerHelpers;
+using static enhancedKanerahRomance.modStructure.ConditionsCheckerBlueprintSegmentBuilder;
 using static enhancedKanerahRomance.modStructure.ActionListBlueprintSegmentBuilder;
 using static enhancedKanerahRomance.modStructure.ActionListHelpers;
 using static enhancedKanerahRomance.modStructure.MiscBlueprintBuilder;
@@ -126,13 +127,12 @@ namespace enhancedKanerahRomance.modContent
             // create cue test 5
             var newCueTestCase5 = DialogueBlueprintBuilder.CreateOrModifyCue(
                 name: "newCueTestCase5",
-                text: "NEW CUE - TEST CASE 5. Null speaker test. Transitions back to newAnswersListTestCase1",
+                text: "NEW CUE - TEST CASE 5. Transitions back to newAnswersListTestCase1",
                 assetId: AssetIds.newCueTestCase5,
                 mode: SetupMode.Create,
                 configure: c =>
                 {
                     c.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newCueTestCase4);
-                    c.Speaker = null; // TODO check
                     c.Continue = DialogueHelpers.CueSelectionHelper.Default();
                     c.Answers = DialogueHelpers.CueAddAnswersListHelper.Create(AssetIds.newAnswersListTestCase1);
                 }
@@ -258,7 +258,8 @@ namespace enhancedKanerahRomance.modContent
 
                     a.ShowOnce = true;
                     a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase1);
-                    a.OnSelect = ActionListHelpers.AddCampingEncounter(AssetIds.newCampingEncounterTestCase1);
+                    a.OnSelect = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(
+                        ActionListHelpers.AddCampingEncounter(AssetIds.newCampingEncounterTestCase1));
 
                 }
             );
@@ -340,7 +341,9 @@ namespace enhancedKanerahRomance.modContent
                     new[] { AssetIds.newCueTestCase2 }
                     );
 
-                    a.OnSelect = ActionListHelpers.FlagSet(AssetIds.newTestUnlockedFlag, 1);
+                    a.OnSelect = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(
+                        ActionListHelpers.FlagSet(AssetIds.newTestUnlockedFlag, 1)
+                        );
                     a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase1);
                 }
             );
@@ -356,7 +359,8 @@ namespace enhancedKanerahRomance.modContent
                     a.NextCue = DialogueHelpers.CueSelectionHelper.Create(
                     new[] { AssetIds.newCueTestCase2 }
                     );
-                    a.ShowConditions = ConditionsCheckerHelpers.FlagUnlocked(AssetIds.newTestUnlockedFlag);
+                    a.ShowConditions = ConditionsCheckerBlueprintSegmentBuilder.WrapAndOrCombineConditionsCheckers(
+                    ConditionsCheckerHelpers.FlagUnlocked(AssetIds.newTestUnlockedFlag));
                     a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase1);
                 }
             );
@@ -372,7 +376,7 @@ namespace enhancedKanerahRomance.modContent
                     a.NextCue = DialogueHelpers.CueSelectionHelper.Create(
                     new[] { AssetIds.newCueTestCase2 }
                     );
-                    a.OnSelect = ActionListHelpers.FlagIncrement(AssetIds.newTestCounterFlag, 1);
+                    a.OnSelect = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(ActionListHelpers.FlagIncrement(AssetIds.newTestCounterFlag, 1));
                     a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase1);
                 }
             );
@@ -455,20 +459,6 @@ namespace enhancedKanerahRomance.modContent
                 }
             );
 
-            // create an actionslist that will play romantic music, to use with our new dialog that's called by the camping encounter
-            var playRomanceMusicActionList = CreateOrModifyActionList(
-                null, // create new
-                SetupMode.Create,
-                actions =>
-                {
-                    actions.Add(new PlayCustomMusic
-                    {
-                        MusicEventStart = "RomanceScene_Play",
-                        MusicEventStop = "RomanceScene_Stop",
-                        name = "PlayCustomMusic" 
-                    });
-                });
-
             // create a new dialog, that we will use to test camping encounter triggers
             var newDialogForCampingEncounterTestCase1 = DialogueBlueprintBuilder.CreateOrModifyDialog(
                 name: "newDialogForCampingEncounterTestCase1",
@@ -479,7 +469,9 @@ namespace enhancedKanerahRomance.modContent
                     dialog.FirstCue = DialogueHelpers.CueSelectionHelper.Create(
                     new[] { AssetIds.newCueTestCase8 }
                     );
-                    dialog.StartActions = playRomanceMusicActionList;
+                    dialog.StartActions = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(
+                        ActionListHelpers.PlayRomanceMusic()
+                        );
                 }
             );
 

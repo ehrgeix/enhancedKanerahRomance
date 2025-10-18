@@ -23,10 +23,9 @@ namespace enhancedKanerahRomance.modStructure
     internal class ConditionsCheckerHelpers
     {
 
-        // builder: ConditionsCheckerHelper
-        // we will likely have to add handling for different conditions as we expand the mod. this just checks flags are unlocked for now (or does nothing)
-        // this is used in basically all dialogue builders
-        // one could argue that this should be in DialogueHelpers, but still
+        // helpers collection: ConditionsCheckerHelper
+        // except empty conditionschecker, returns raw conditions to be wrapped by WrapAndOrCombineConditionsCheckers (or possibly used by something similar later)
+
         public static ConditionsChecker Default()
         {
             return new ConditionsChecker
@@ -37,7 +36,7 @@ namespace enhancedKanerahRomance.modStructure
         }
 
         // TODO, FlagUnlocked - IMPROVE
-        public static ConditionsChecker FlagUnlocked(string flagGuid)
+        public static Condition FlagUnlocked(string flagGuid)
         {
             var flag = ResourcesLibrary.TryGetBlueprint<BlueprintUnlockableFlag>(flagGuid);
             if (flag == null)
@@ -50,11 +49,7 @@ namespace enhancedKanerahRomance.modStructure
             condition.ExceptSpecifiedValues = false;
             condition.SpecifiedValues = Array.Empty<int>();
 
-            return new ConditionsChecker
-            {
-                Operation = Operation.And,
-                Conditions = new Condition[] { condition }
-            };
+            return condition;
         }
 
         // FlagValue? TODO check this
@@ -103,7 +98,7 @@ namespace enhancedKanerahRomance.modStructure
         }
 
         // companion in party
-        public static ConditionsChecker CompanionInParty(string companionGuid)
+        public static Condition CompanionInParty(string companionGuid)
         {
             var companion = ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(companionGuid);
             if (companion == null)
@@ -120,11 +115,7 @@ namespace enhancedKanerahRomance.modStructure
             condition.MatchWhenEx = false;
             condition.Not = false;
 
-            return new ConditionsChecker
-            {
-                Operation = Operation.And,
-                Conditions = new Condition[] { condition }
-            };
+            return condition;
         }
 
     }

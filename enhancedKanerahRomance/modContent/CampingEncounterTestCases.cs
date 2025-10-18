@@ -38,23 +38,15 @@ namespace enhancedKanerahRomance.modContent
                 configure: campingencounter =>
                 {
                     // only proc if flag set by answer 7 is active
-                     campingencounter.Conditions = ConditionsCheckerBlueprintSegmentBuilder.CombineConditionsCheckers(
+                     campingencounter.Conditions = ConditionsCheckerBlueprintSegmentBuilder.WrapAndOrCombineConditionsCheckers(
                          ConditionsCheckerHelpers.FlagUnlocked(AssetIds.newTestUnlockedFlag),
                          ConditionsCheckerHelpers.CompanionInParty(AssetIds.kanerahCompanion)
                          );
 
-                    // start dialogue
-                    campingencounter.EncounterActions = ActionListBlueprintSegmentBuilder.CreateOrModifyActionList(
-                        campingencounter.EncounterActions,
-                        SetupMode.Create,
-                        actions =>
-                        {
-                        actions.Add(ActionListHelpers.StartDialog(
-                        companionName: "CompanionInParty",
-                        companionGuid: AssetIds.kanerahCompanion,
-                        dialogName: "StartDialog",
-                        dialogGuid: AssetIds.newDialogForCampingEncounterTestCase1));
-                        }
+                    // start dialogue, remove encounter from the pool so it doesn't proc again
+                    campingencounter.EncounterActions = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(
+                        StartDialog(AssetIds.newDialogForCampingEncounterTestCase1, AssetIds.kanerahCompanion),
+                        RemoveCampingEncounter(AssetIds.newCampingEncounterTestCase1)
                         );
                 }
                 );

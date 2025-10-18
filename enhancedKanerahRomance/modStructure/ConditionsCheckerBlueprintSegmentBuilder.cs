@@ -26,23 +26,20 @@ namespace enhancedKanerahRomance.modStructure
         // wip - this handles combining conditions
         // could do something more complicated here w createormodify, not sure we need to though
         // todo
-        public static ConditionsChecker CombineConditionsCheckers(params ConditionsChecker[] conditionscheckers)
+        public static ConditionsChecker WrapAndOrCombineConditionsCheckers(params Condition[] conditions)
         {
-            var combined = new List<Condition>();
-
-            foreach (var checker in conditionscheckers)
+            if (conditions == null)
             {
-                if (checker?.Conditions == null) continue;
-                combined.AddRange(checker.Conditions);
+                Main.Log.Log("ConditionsCheckerBlueprintSegmentBuilder, CombineConditionsCheckers ERROR: conditions null");
             }
 
             return new ConditionsChecker
             {
                 Operation = Operation.And,
-                Conditions = combined.ToArray()
+                Conditions = conditions
             };
         }
 
-            
+
     }
 }
