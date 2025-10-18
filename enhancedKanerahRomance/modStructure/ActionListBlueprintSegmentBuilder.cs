@@ -25,9 +25,6 @@ namespace enhancedKanerahRomance.modStructure
     public static class ActionListBlueprintSegmentBuilder
     {
 
-        // Builder ActionList
-        // we refactored this stuff a LOT. disaster.
-
         // combine actions into an actionList. it turns out that generally this is all we need, we just make helpers as needed
         public static ActionList WrapAndOrCombineActionsIntoActionList(params GameAction[] actions)
         {

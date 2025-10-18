@@ -259,7 +259,8 @@ namespace enhancedKanerahRomance.modContent
                     a.ShowOnce = true;
                     a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase1);
                     a.OnSelect = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(
-                        ActionListHelpers.AddCampingEncounter(AssetIds.newCampingEncounterTestCase1));
+                        ActionListHelpers.AddCampingEncounter(AssetIds.newCampingEncounterTestCase1)
+                        );
 
                 }
             );

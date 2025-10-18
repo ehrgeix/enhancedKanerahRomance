@@ -28,7 +28,7 @@ namespace enhancedKanerahRomance.modContent
     {
         public static void AddActionListTestCases()
         {
-            // KANERAH BARK EDIT
+            // KANERAH BARK EDIT - POST COITUS, ADDS NEW BARKSTRING
             // there's a lot of manual stuff here, and we could probably develop more helpers to replace it
             // but we're not planning to edit people's barks often, so maybe this is fine?
 

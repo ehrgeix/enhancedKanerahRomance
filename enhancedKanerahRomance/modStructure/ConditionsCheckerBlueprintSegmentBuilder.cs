@@ -23,9 +23,8 @@ namespace enhancedKanerahRomance.modStructure
 {
     internal class ConditionsCheckerBlueprintSegmentBuilder
     {
-        // wip - this handles combining conditions
+        // this handles combining conditions
         // could do something more complicated here w createormodify, not sure we need to though
-        // todo
         public static ConditionsChecker WrapAndOrCombineConditionsCheckers(params Condition[] conditions)
         {
             if (conditions == null)
