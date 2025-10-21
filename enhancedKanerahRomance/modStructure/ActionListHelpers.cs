@@ -87,9 +87,32 @@ namespace enhancedKanerahRomance.modStructure
             // set up companion
             var companionInParty = ScriptableObject.CreateInstance<CompanionInParty>();
             companionInParty.companion = ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(companionGuid);
-            companionInParty.IncludeRemote = false;
+            companionInParty.IncludeRemote = true;
             companionInParty.IncludeExCompanions = false;
             companionInParty.IncludeDettached = false;
+            companionInParty.name = dialogName;
+
+            // set up dialog started by this companion
+            var startDialog = ScriptableObject.CreateInstance<StartDialog>();
+            startDialog.DialogueOwner = companionInParty;
+            startDialog.Dialogue = ResourcesLibrary.TryGetBlueprint<BlueprintDialog>(dialogGuid);
+            startDialog.name = companionName;
+
+            return startDialog;
+        }
+
+        // start dialogue helper, calls a blueprintDialog, this one is set up to include detatched party members so e.g., for use in capital/tavern dialog
+        public static GameAction StartDialogIncludeDetached(string dialogGuid,
+            string companionGuid,
+            string dialogName = "StartDialog",
+            string companionName = "CompanionInParty")
+        {
+            // set up companion
+            var companionInParty = ScriptableObject.CreateInstance<CompanionInParty>();
+            companionInParty.companion = ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(companionGuid);
+            companionInParty.IncludeRemote = true;
+            companionInParty.IncludeExCompanions = false;
+            companionInParty.IncludeDettached = true;
             companionInParty.name = dialogName;
 
             // set up dialog started by this companion

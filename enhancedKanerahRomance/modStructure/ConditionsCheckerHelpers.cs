@@ -87,7 +87,7 @@ namespace enhancedKanerahRomance.modStructure
                     condition.MaxValue = value - 1;
                     break;
                 default:
-                    throw new ArgumentException($"DialogueHelpers, ConditionsChecker, ERROR: wrong operator used");
+                    throw new ArgumentException("DialogueHelpers, ConditionsChecker, ERROR: wrong operator used");
             }
 
             return new ConditionsChecker

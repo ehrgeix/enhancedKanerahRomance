@@ -20,9 +20,9 @@ using static enhancedKanerahRomance.modStructure.ActionListBlueprintSegmentBuild
 
 namespace enhancedKanerahRomance.modStructure
 {
+    // used for any leftover blueprint builds not handled by a more specific builder
     public static class MiscBlueprintBuilder
     {
-
             public static BlueprintUnlockableFlag CreateUnlockableFlag(string assetId)
         {
             // create flag blueprint

@@ -180,6 +180,20 @@ namespace enhancedKanerahRomance.modContent
                 }
             );
 
+            // create cue test 9
+            var newCueTestCase9 = DialogueBlueprintBuilder.CreateOrModifyCue(
+                name: "newCueTestCase9",
+                text: "NEW CUE - TEST CASE 9. called by BlueprintAreaTestCase",
+                assetId: AssetIds.newCueTestCase9,
+                mode: SetupMode.Create,
+                configure: c =>
+                {
+                    c.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newDialogForCampingEncounterTestCase1);
+                    c.Speaker = speakerKanerah2;
+                    c.Continue = DialogueHelpers.CueSelectionHelper.Default();
+                }
+            );
+
 
             // create check test 1
             // this replaces a nextcue, so it has a parentasset of answer. but you never actually "see" it, it just sends you to either successcue or failcue depending if you pass or fail the check
@@ -202,6 +216,7 @@ namespace enhancedKanerahRomance.modContent
             // create/register flags
             var newTestCounterFlag = MiscBlueprintBuilder.CreateUnlockableFlag(AssetIds.newTestCounterFlag);
             var newTestUnlockedFlag = MiscBlueprintBuilder.CreateUnlockableFlag(AssetIds.newTestUnlockedFlag);
+            var newTestUnlockedFlag2 = MiscBlueprintBuilder.CreateUnlockableFlag(AssetIds.newTestUnlockedFlag2);
 
             // example stat check (persuasion), to use in createAnswer
             // this doesn't work for what I wanted, this is a check to SHOW THE ANSWER - usage: a.ShowCheck = persuasionCheckExample;
@@ -402,6 +417,25 @@ namespace enhancedKanerahRomance.modContent
                 }
             );
 
+            // create answer 11
+            var newAnswerTestCase11 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
+                name: "newAnswerTestCase11",
+                text: "NEW TEST ANSWER TEST CASE 11. Unlocks flag (2) with flagset helper, flag has to be created in separate variable earlier. This should enable tavern encounter",
+                assetId: AssetIds.newAnswerTestCase11,
+                mode: SetupMode.Create,
+                configure: a =>
+                {
+                    a.NextCue = DialogueHelpers.CueSelectionHelper.Create(
+                    new[] { AssetIds.newCueTestCase2 }
+                    );
+
+                    a.OnSelect = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(
+                        ActionListHelpers.FlagSet(AssetIds.newTestUnlockedFlag2, 1)
+                        );
+                    a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase1);
+                }
+            );
+
 
             // create AnswersList
             var newAnswersListTestBasic = DialogueBlueprintBuilder.CreateOrModifyAnswersList(
@@ -420,6 +454,7 @@ namespace enhancedKanerahRomance.modContent
                     al.Answers.Add(newAnswerTestCase8);
                     al.Answers.Add(newAnswerTestCase9);
                     al.Answers.Add(newAnswerTestCase10);
+                    al.Answers.Add(newAnswerTestCase11);
                 }
             );
 
@@ -476,12 +511,21 @@ namespace enhancedKanerahRomance.modContent
                 }
             );
 
-
-
-
-
-
+            // create a new dialog, that we will use to test blueprintarea triggers
+            var newDialogForBlueprintAreaTestCase1 = DialogueBlueprintBuilder.CreateOrModifyDialog(
+                name: "newDialogForBlueprintAreaTestCase1",
+                assetId: AssetIds.newDialogForBlueprintAreaTestCase1,
+                mode: SetupMode.Create,
+                configure: dialog =>
+                {
+                    dialog.FirstCue = DialogueHelpers.CueSelectionHelper.Create(
+                    new[] { AssetIds.newCueTestCase9 }
+                    );
+                    dialog.StartActions = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(
+                        ActionListHelpers.PlayRomanceMusic()
+                        );
+                }
+            );
         }
-
     }
 }

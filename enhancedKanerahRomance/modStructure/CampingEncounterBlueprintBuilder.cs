@@ -19,8 +19,6 @@ using static Kingmaker.UnitLogic.Mechanics.Conditions.ContextConditionCompareTar
 using static enhancedKanerahRomance.modStructure.Globals;
 using static enhancedKanerahRomance.modStructure.ActionListHelpers;
 using Kingmaker.Globalmap.Blueprints;
-using Kingmaker.Controllers.Brain.Blueprints.Considerations;
-using System.Runtime.Remoting.Messaging;
 
 namespace enhancedKanerahRomance.modStructure
 {

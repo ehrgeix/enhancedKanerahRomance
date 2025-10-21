@@ -55,6 +55,8 @@ namespace enhancedKanerahRomance
                     Log.Log("Main, HarmonyPatch: AddActionListTestCases successfully loaded");
                     CampingEncounterTestCases.AddCampingEncounterTestCases();
                     Log.Log("Main, HarmonyPatch: AddCampingEncounterTestCases successfully loaded");
+                    ActivateTriggerTestCases.AddActivateTriggerTestCases();
+                    Log.Log("Main, HarmonyPatch: AddActivateTriggerTestCases successfully loaded");
                     // FlirtOptions.AddDialogueFlirtOptions();
                     // Log.Log("Main, HarmonyPatch: FlirtOptions AddDialogue successfully loaded");
                     MiscLocalizationAndRegistration.DelayedBlueprintBuild.Process();
@@ -63,7 +65,9 @@ namespace enhancedKanerahRomance
                 }
                 catch (Exception e)
                 {
-                    Log.Log($"Main, HarmonyPatch, ERROR: {e}");
+                    Log.Log(
+                        
+                        "Main, HarmonyPatch, ERROR: {e}");
                 }
             }
         }

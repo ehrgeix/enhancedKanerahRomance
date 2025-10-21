@@ -23,27 +23,29 @@ using static enhancedKanerahRomance.modStructure.MiscLocalizationAndRegistration
 
 namespace enhancedKanerahRomance.modContent
 {
-    internal class CampingEncounterTestCases
+    internal class ActivateTriggerTestCases
     {
-        public static void AddCampingEncounterTestCases()
+        public static void AddActivateTriggerTestCases()
         {
-            var newCampingEncounterTestCase1 = CampingEncounterBlueprintBuilder.CreateOrModifyCampingEncounter(
-                name: "newCampingEncounterTestCase1",
-                assetId: AssetIds.newCampingEncounterTestCase1,
-                mode: SetupMode.Create,
-                configure: campingencounter =>
+            var newActivateTriggerTestCase1 = ActivateTriggerBlueprintSegmentBuilder.CreateActivateTrigger(
+                name: "newActivateTriggerTestCase1",
+                areaAssetId: AssetIds.CapitalSquareAreaMechanics,
+                configure: trigger =>
                 {
-                    // only proc if flag set by answer 7 is active
-                     campingencounter.Conditions = ConditionsCheckerBlueprintSegmentBuilder.WrapAndOrCombineConditionsCheckers(
-                         ConditionsCheckerHelpers.FlagUnlocked(AssetIds.newTestUnlockedFlag),
-                         ConditionsCheckerHelpers.CompanionInParty(AssetIds.kanerahCompanion)
-                         );
+                    trigger.m_AlsoOnAreaLoad = true;
+                    trigger.m_Once = true; 
 
-                    // start dialogue, remove encounter from the pool so it doesn't proc again
-                    campingencounter.EncounterActions = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(
-                        StartDialog(AssetIds.newDialogForCampingEncounterTestCase1, AssetIds.kanerahCompanion),
-                        RemoveCampingEncounter(AssetIds.newCampingEncounterTestCase1)
+                    trigger.Conditions = ConditionsCheckerBlueprintSegmentBuilder.WrapAndOrCombineConditionsCheckers(
+                        ConditionsCheckerHelpers.FlagUnlocked(AssetIds.newTestUnlockedFlag2)
+                        // add a condition to check kanerah around, TODO
+                        // add translocate stuff
                         );
+
+                    trigger.Actions = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(
+                        StartDialogIncludeDetached(AssetIds.newDialogForBlueprintAreaTestCase1, AssetIds.kanerahCompanion)
+                        // remove trigger somehow? after fired, might need to remove it from pool - think m_Once handles this, TODO confirm
+                        );
+
                 }
                 );
         }

@@ -16,7 +16,6 @@ using static enhancedKanerahRomance.modStructure.ActionListHelpers;
 using static enhancedKanerahRomance.modStructure.MiscLocalizationAndRegistration;
 using static UnityModManagerNet.UnityModManager.TextureReplacer.Skin;
 using static enhancedKanerahRomance.modContent.AssetIds;
-using System.Diagnostics.Eventing.Reader;
 using static enhancedKanerahRomance.modStructure.Globals;
 
 namespace enhancedKanerahRomance.modStructure
@@ -76,7 +75,8 @@ namespace enhancedKanerahRomance.modStructure
                         // check parentAsset set
                         if (cue.ParentAsset == null)
                         {
-                            Main.Log.Log($"DialogueBlueprintBuilder, CreateOrModifyCue, ERROR: ParentAsset {name}");
+                            Main.Log.Log(
+                                "DialogueBlueprintBuilder, CreateOrModifyCue, ERROR: ParentAsset {name}");
                         }
                     }
                     catch (Exception ex)

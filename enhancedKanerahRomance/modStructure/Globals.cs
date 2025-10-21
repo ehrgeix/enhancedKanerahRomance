@@ -8,7 +8,7 @@ namespace enhancedKanerahRomance.modStructure
 {
     public static class Globals
     {
-        // Support
+        // most of our builders want access to this
         public enum SetupMode
         {
             Create,

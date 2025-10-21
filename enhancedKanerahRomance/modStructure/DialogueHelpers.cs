@@ -68,10 +68,10 @@ namespace enhancedKanerahRomance.modStructure
                 var failCue = ResourcesLibrary.TryGetBlueprint<BlueprintCue>(failId);
 
                 if (successCue == null)
-                    Main.Log.Log($"DialogueHelpers, CheckAddSuccessFailCuesHelper, ERROR: SuccessCue not found for {successId}");
+                    Main.Log.Log("DialogueHelpers, CheckAddSuccessFailCuesHelper, ERROR: SuccessCue not found");
 
                 if (failCue == null)
-                    Main.Log.Log($"DialogueHelpers, CheckAddSuccessFailCuesHelper, ERROR: FailCue not found for {failId}");
+                    Main.Log.Log("DialogueHelpers, CheckAddSuccessFailCuesHelper, ERROR: FailCue not found");
 
                 return (successCue, failCue);
             }
@@ -254,7 +254,8 @@ namespace enhancedKanerahRomance.modStructure
             var parent = ResourcesLibrary.TryGetBlueprint<BlueprintScriptableObject>(parentAssetId);
             if (parent == null)
             {
-                Main.Log.Log($"DialogueHelpers, ParentAssetHelper: ERROR: missing blueprint for parentAssetId");
+                Main.Log.Log(
+                    "DialogueHelpers, ParentAssetHelper: ERROR: missing blueprint for parentAssetId");
                 return null;
             }
 
