@@ -26,7 +26,8 @@ namespace enhancedKanerahRomance.modContent
         // areas and related bits
         public const string areaCapitalTavern_Indoor = "5c3935c8ab777f04f83f272425b750f9";
         public const string componentListCapitalSquareAreaMechanics = "90b7e95ae946cc542bc94c75d931ee22";
-        public const string areaEnterPointKanerahRoom = "e22132a384c243e4eb1223f8623a777f";
+        public const string areaEnterPointKanerahRoomFromVillage = "e22132a384c243e4eb1223f8623a777f";
+        public const string areaEnterPointKanerahRoomFromStone = "45e99ad5cb852474f991acf889f70fa7";
         public const string locatorKanerahRoom = "f31018ae-91fd-4088-85b8-c003da63e4f1";
 
         // flags
@@ -35,6 +36,7 @@ namespace enhancedKanerahRomance.modContent
         // cutscenes
         public const string cutsceneGenericRomanceEvent = "a2c8aacd03bba4e41b4c6ccac15bee8b";
         public const string cutsceneKanerahSex = "5004819ce74793e41a92a7ab700021f4";
+        // public const string cutsceneKanerahRoomFOWRemover = "331686c28d4aa1e43a7e1a19bbd4fd98"; we don't use this I think
 
         // testcase assetIds
         public const string newTestCounterFlag = "11cdd5ef5beb4891b51ba9fd97f338a4";
@@ -87,6 +89,8 @@ namespace enhancedKanerahRomance.modContent
 
         public const string newBarkString1 = "467cd1afe7424922b0b6376117cee743";
         public const string newBarkString2 = "79ce97a33967407095fbc854cd2f83a4";
+
+        public const string newCutsceneFadeIn1 = "449a523520d64825a872272bb4b0c1a6";
     }
 
 }

@@ -201,10 +201,8 @@ namespace enhancedKanerahRomance.modStructure
             lover.IncludeDettached = true;
 
             // set up dialog used
-            var targetDialog = new Dialog
-            {
-                Value = ResourcesLibrary.TryGetBlueprint<BlueprintDialog>(dialogGuid)
-            };
+            var targetDialog = ScriptableObject.CreateInstance<Dialog>();
+            targetDialog.Value = ResourcesLibrary.TryGetBlueprint<BlueprintDialog>(dialogGuid);
 
             // pass the above lover (companion) & dialog to the cutscene
             cutscene.Parameters = new ParametrizedContextSetter

@@ -44,7 +44,8 @@ namespace enhancedKanerahRomance.modContent
                         );
 
                     // actionlist set up to run cutscene
-                    // as far as I can tell this doesn't need a stone/village check
+                    // TODO -- add stone/village check later in this chain of events
+                    // + fix fog of war, I think oc have a cutscene for this
                     trigger.Actions = WrapAndOrCombineActionsIntoActionList(
                         PlayGenericRomanceCutscene(
                             AssetIds.unitKanerah,
@@ -52,6 +53,8 @@ namespace enhancedKanerahRomance.modContent
                         );
 
 
+
+                    // ATTEMPT ONE:
                     // DO NOT delete the below, it completely works EXCEPT there's no appropriate translocateunit on enter capital
                     // we might need stone vs village logic later
                     // it replaces everything after START conditions in the block above

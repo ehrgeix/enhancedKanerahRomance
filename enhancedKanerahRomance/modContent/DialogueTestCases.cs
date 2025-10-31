@@ -9,16 +9,17 @@ using Kingmaker.Enums;
 using Kingmaker.UnitLogic.Alignments;
 using System.Collections.Generic;
 using UnityEngine;
+using static AkTriggerBase;
 using static enhancedKanerahRomance.modContent.AssetIds;
-using static enhancedKanerahRomance.modStructure.DialogueBlueprintBuilder;
-using static enhancedKanerahRomance.modStructure.DialogueHelpers;
-using static enhancedKanerahRomance.modStructure.ConditionsCheckerHelpers;
-using static enhancedKanerahRomance.modStructure.ConditionsCheckerBlueprintSegmentBuilder;
 using static enhancedKanerahRomance.modStructure.ActionListBlueprintSegmentBuilder;
 using static enhancedKanerahRomance.modStructure.ActionListHelpers;
+using static enhancedKanerahRomance.modStructure.ConditionsCheckerBlueprintSegmentBuilder;
+using static enhancedKanerahRomance.modStructure.ConditionsCheckerHelpers;
+using static enhancedKanerahRomance.modStructure.DialogueBlueprintBuilder;
+using static enhancedKanerahRomance.modStructure.DialogueHelpers;
+using static enhancedKanerahRomance.modStructure.Globals;
 using static enhancedKanerahRomance.modStructure.MiscBlueprintBuilder;
 using static enhancedKanerahRomance.modStructure.MiscLocalizationAndRegistration;
-using static enhancedKanerahRomance.modStructure.Globals;
 
 namespace enhancedKanerahRomance.modContent
 {
@@ -506,6 +507,9 @@ namespace enhancedKanerahRomance.modContent
                 }
             );
 
+            // add fade cutscene used for answer 12
+            var fadeInCs = CutsceneHelpers.CutsceneFadeIn("fadeIn1s", AssetIds.newCutsceneFadeIn1, 1.0f);
+
             // create answer 12
             var newAnswerTestCase12 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
                 name: "newAnswerTestCase12", // name
@@ -514,17 +518,31 @@ namespace enhancedKanerahRomance.modContent
                 mode: SetupMode.Create,
                 configure: a =>
                 {
-                    a.NextCue = DialogueHelpers.CueSelectionHelper.Default();
-                    // maybe it can be empty if we're teleporting???
+
+                    a.NextCue = DialogueHelpers.CueSelectionHelper.Default(); // nextcue can be empty if we have an actionlist procing teleport
                     a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase2);
-                    a.OnSelect = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(
-                        
+
+                    // check if capital is stone or village
+                    var capitalStone = ConditionsCheckerBlueprintSegmentBuilder.WrapAndOrCombineANDConditionsCheckers(
+                        ConditionsCheckerHelpers.ConditionFlagUnlocked(AssetIds.flagStoneCapital)
+                    );
+
+
+                    var actionList = ActionListBlueprintSegmentBuilder.TrueFalseCheckInsideActionList(
+                        trueorfalse: capitalStone,
+
+                        // true = capital is stone
+                        trueActions: new GameAction[]
+                        {
                         ActionListHelpers.TeleportPartyThenProcActionList(
-                            AssetIds.areaEnterPointKanerahRoom,
+                            AssetIds.areaEnterPointKanerahRoomFromStone,
 
                                 ActionListHelpers.TranslocateUnitIncludeDetached(
                                 AssetIds.unitKanerah,
                                 AssetIds.locatorKanerahRoom),
+
+                                // 1s fadein cutscene
+                                PlayCutscene(AssetIds.newCutsceneFadeIn1),
 
                                 ActionListHelpers.StartDialogIncludeDetached(
                                 AssetIds.newDialogForActivateTriggerTestCase2,
@@ -533,12 +551,40 @@ namespace enhancedKanerahRomance.modContent
                                 // we were having problems w dialog trigger happening before teleport and screwing stuff up
                                 // but this reordering fixed, I guess we kill the cutscene last
                                 ActionListHelpers.StopCutscene(AssetIds.cutsceneGenericRomanceEvent)
-
                                 )
-                                );
+                        },
 
+                        // false = capital is village
+                        falseActions: new GameAction[]
+                        {
+                        ActionListHelpers.TeleportPartyThenProcActionList(
+                            AssetIds.areaEnterPointKanerahRoomFromVillage,
+
+                                ActionListHelpers.TranslocateUnitIncludeDetached(
+                                AssetIds.unitKanerah,
+                                AssetIds.locatorKanerahRoom),
+
+                                // 1s fadein cutscene
+                                PlayCutscene(AssetIds.newCutsceneFadeIn1),
+
+                                ActionListHelpers.StartDialogIncludeDetached(
+                                AssetIds.newDialogForActivateTriggerTestCase2,
+                                AssetIds.unitKanerah),
+
+                                // we were having problems w dialog trigger happening before teleport and screwing stuff up
+                                // but this reordering fixed, I guess we kill the cutscene last
+                                ActionListHelpers.StopCutscene(AssetIds.cutsceneGenericRomanceEvent)
+                                )
+                     },
+
+                        comment: "village or stone capital check as per OC"
+                        );
+
+                    // actually move this stuff into the actionList
+                    a.OnSelect = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(actionList);
                 }
             );
+
 
             // create answer 13
             var newAnswerTestCase13 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
@@ -563,12 +609,12 @@ namespace enhancedKanerahRomance.modContent
                 mode: SetupMode.Create,
                 configure: a =>
                 {
-                a.NextCue = DialogueHelpers.CueSelectionHelper.Default();
-                // maybe it can be empty if we're using an actionslist
-                a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase3);
-                a.OnSelect = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(
-                    PlayCutscene(AssetIds.cutsceneKanerahSex)
-                    );
+                    a.NextCue = DialogueHelpers.CueSelectionHelper.Default();
+                    // maybe it can be empty if we're using an actionslist
+                    a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase3);
+                    a.OnSelect = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(
+                        PlayCutscene(AssetIds.cutsceneKanerahSex)
+                        );
                 }
             );
 

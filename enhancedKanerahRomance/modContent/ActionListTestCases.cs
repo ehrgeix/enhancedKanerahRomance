@@ -54,39 +54,33 @@ namespace enhancedKanerahRomance.modContent
                 return;
             }
 
+            // create target for barks
+            var target = ScriptableObject.CreateInstance<CompanionInParty>();
+            target.companion = ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(AssetIds.unitKanerah);
+            target.IncludeRemote = true;
+            target.IncludeExCompanions = false;
+            target.IncludeDettached = true;
+
             // call builder to create new section of actionList (first)
-            var newWeightedAction1 = ActionListBlueprintSegmentBuilder.CreateWeightedAction(
-                new ShowBark
-                {
-                    WhatToBark = barkString,
-                    TargetUnit = new CompanionInParty
-                    {
-                        companion = ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(AssetIds.unitKanerah),
-                        IncludeRemote = true,
-                        IncludeExCompanions = false,
-                        IncludeDettached = true
-                    }
-                }
-            );
+            var bark1 = ScriptableObject.CreateInstance<ShowBark>();
+            bark1.WhatToBark = barkString;
+            bark1.TargetUnit = target;
+
+            var newWeightedAction1 = ActionListBlueprintSegmentBuilder.CreateWeightedAction(bark1);
+
 
             // call builder to create new section of actionList (again)
             // this one is the same but only shows w flag set (by answer 7 testcase)
-            var newWeightedAction2 = ActionListBlueprintSegmentBuilder.CreateWeightedAction(
-                new ShowBark
-                {
-                    WhatToBark = barkString2,
-                    TargetUnit = new CompanionInParty
-                    {
-                        companion = ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(AssetIds.unitKanerah),
-                        IncludeRemote = true,
-                        IncludeExCompanions = false,
-                        IncludeDettached = true
-                    }
-                },
-                // only show if flag from testcase 7 set
-                conditions: ConditionsCheckerBlueprintSegmentBuilder.WrapAndOrCombineANDConditionsCheckers(
-                    ConditionsCheckerHelpers.ConditionFlagUnlocked(AssetIds.newTestUnlockedFlag)
-                    )
+            var conditions = ConditionsCheckerBlueprintSegmentBuilder.WrapAndOrCombineANDConditionsCheckers(
+            ConditionsCheckerHelpers.ConditionFlagUnlocked(AssetIds.newTestUnlockedFlag)
+            );
+
+            var bark2 = ScriptableObject.CreateInstance<ShowBark>();
+            bark2.WhatToBark = barkString2;
+            bark2.TargetUnit = target;
+
+            var newWeightedAction2 = ActionListBlueprintSegmentBuilder.CreateWeightedAction(bark2,
+                conditions: conditions
             );
 
             // add the new section we just created to the randomAction array in the actionlist
