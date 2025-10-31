@@ -25,17 +25,32 @@ namespace enhancedKanerahRomance.modStructure
     {
         // this handles combining conditions
         // could do something more complicated here w createormodify, not sure we need to though
-        public static ConditionsChecker WrapAndOrCombineConditionsCheckers(params Condition[] conditions)
+        public static ConditionsChecker WrapAndOrCombineANDConditionsCheckers(params Condition[] conditions)
         {
             if (conditions == null)
             {
-                Main.Log.Log("ConditionsCheckerBlueprintSegmentBuilder, CombineConditionsCheckers ERROR: conditions null");
+                Main.Log.Log("ConditionsCheckerBlueprintSegmentBuilder, WrapAndOrCombineConditionsCheckers ERROR: conditions null");
             }
 
             return new ConditionsChecker
             {
                 Operation = Operation.And,
                 Conditions = conditions
+            };
+        }
+
+        // may not be used in the end, looks like owlcat mostly use branching iftrue/iffalse from an and??? see ActionListBlueprintSegmentHelper TrueFalseCheckInsideActionList
+        public static ConditionsChecker WrapAndOrCombineORConditionsCheckers(params Condition[] conditions)
+        {
+            if (conditions == null)
+            {
+                Main.Log.Log("ConditionsCheckerBlueprintSegmentBuilder,  ERROR: conditions null");
+            }
+
+            return new ConditionsChecker
+            {
+                Operation = Operation.Or,
+                Conditions = conditions ?? Array.Empty<Condition>()
             };
         }
 

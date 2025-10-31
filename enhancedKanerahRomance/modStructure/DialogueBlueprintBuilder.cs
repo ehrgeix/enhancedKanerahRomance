@@ -75,8 +75,7 @@ namespace enhancedKanerahRomance.modStructure
                         // check parentAsset set
                         if (cue.ParentAsset == null)
                         {
-                            Main.Log.Log(
-                                "DialogueBlueprintBuilder, CreateOrModifyCue, ERROR: ParentAsset {name}");
+                            Main.Log.Log($"DialogueBlueprintBuilder, CreateOrModifyCue, ERROR: ParentAsset {name}");
                         }
                     }
                     catch (Exception ex)

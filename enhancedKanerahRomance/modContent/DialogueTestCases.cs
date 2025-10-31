@@ -29,7 +29,7 @@ namespace enhancedKanerahRomance.modContent
 
             // BLOCK OF VARIABLES FOR CUE USE
             var speakerKanerah = DialogueHelpers.SpeakerHelper.Create(
-                blueprint: ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(AssetIds.kanerahPortrait),
+                blueprint: ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(AssetIds.unitKanerah),
                 moveCamera: true,
                 checkDistance: true,
                 noSpeaker: false,
@@ -38,7 +38,7 @@ namespace enhancedKanerahRomance.modContent
                 );
 
             var speakerKanerah2 = DialogueHelpers.SpeakerHelper.Create(
-            blueprint: ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(AssetIds.kanerahPortrait),
+            blueprint: ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(AssetIds.unitKanerah),
             moveCamera: true,
             checkDistance: true,
             noSpeaker: false,
@@ -169,7 +169,7 @@ namespace enhancedKanerahRomance.modContent
             // create cue test 8
             var newCueTestCase8 = DialogueBlueprintBuilder.CreateOrModifyCue(
                 name: "newCueTestCase8",
-                text: "NEW CUE - TEST CASE 8. called by campingEncounterTestCase",
+                text: "NEW CUE - TEST CASE 8. called by campingEncounterTestCases",
                 assetId: AssetIds.newCueTestCase8,
                 mode: SetupMode.Create,
                 configure: c =>
@@ -183,17 +183,87 @@ namespace enhancedKanerahRomance.modContent
             // create cue test 9
             var newCueTestCase9 = DialogueBlueprintBuilder.CreateOrModifyCue(
                 name: "newCueTestCase9",
-                text: "NEW CUE - TEST CASE 9. called by BlueprintAreaTestCase",
+                text: "NEW CUE - TEST CASE 9. called by ActivateTriggerTestCases1",
                 assetId: AssetIds.newCueTestCase9,
                 mode: SetupMode.Create,
                 configure: c =>
                 {
-                    c.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newDialogForCampingEncounterTestCase1);
+                    c.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newDialogForActivateTriggerTestCase1);
                     c.Speaker = speakerKanerah2;
+                    c.Continue = DialogueHelpers.CueSelectionHelper.Default();
+                    c.Answers = DialogueHelpers.CueAddAnswersListHelper.Create(AssetIds.newAnswersListTestCase2);
+                }
+            );
+
+            /* not used, replaced by just the answer
+            // create cue test 10
+            var newCueTestCase10 = DialogueBlueprintBuilder.CreateOrModifyCue(
+                name: "newCueTestCase10",
+                text: "NEW CUE - TEST CASE 10. Turnspeaker = true. Responses to activatetrigger1, in capital square cutscene. Let's teleport to my place!",
+                assetId: AssetIds.newCueTestCase10,
+                mode: SetupMode.Create,
+                configure: c =>
+                {
+                    c.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswerTestCase12);
+                    c.Speaker = speakerKanerah2;
+                    c.TurnSpeaker = true;
+                    c.Continue = DialogueHelpers.CueSelectionHelper.Default();
+                    c.OnStop = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(
+                        ActionListHelpers.TeleportPartyThenProcActionList(
+                            AssetIds.areaEnterPointKanerahRoom,
+                                (ActionListHelpers.StartDialogIncludeDetached(
+                                AssetIds.newDialogForActivateTriggerTestCase2,
+                                AssetIds.unitKanerah))
+                            )
+                        );
+                }
+            ); */
+
+            // create cue test 11
+            var newCueTestCase11 = DialogueBlueprintBuilder.CreateOrModifyCue(
+                name: "newCueTestCase11",
+                text: "NEW CUE - TEST CASE 11. Turnspeaker = true. Responses to activatetrigger1, in capital square cutscene. exit dialogue",
+                assetId: AssetIds.newCueTestCase11,
+                mode: SetupMode.Create,
+                configure: c =>
+                {
+                    c.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswerTestCase13);
+                    c.Speaker = speakerKanerah2;
+                    c.TurnSpeaker = true;
                     c.Continue = DialogueHelpers.CueSelectionHelper.Default();
                 }
             );
 
+            // create cue test 12
+            var newCueTestCase12 = DialogueBlueprintBuilder.CreateOrModifyCue(
+                name: "newCueTestCase12",
+                text: "NEW CUE - TEST CASE 12. FINAL - displayed in Kanerah's house after teleport. Called by activatetriggertestcase2",
+                assetId: AssetIds.newCueTestCase12,
+                mode: SetupMode.Create,
+                configure: c =>
+                {
+                    c.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswerTestCase14);
+                    c.Speaker = speakerKanerah2;
+                    c.TurnSpeaker = true;
+                    c.Continue = DialogueHelpers.CueSelectionHelper.Default();
+                    c.Answers = DialogueHelpers.CueAddAnswersListHelper.Create(AssetIds.newAnswersListTestCase3);
+                }
+            );
+
+            // create cue test 13
+            var newCueTestCase13 = DialogueBlueprintBuilder.CreateOrModifyCue(
+                name: "newCueTestCase13",
+                text: "NEW CUE - TEST CASE 12. FINAL - displayed in Kanerah's house after teleport. Exit",
+                assetId: AssetIds.newCueTestCase13,
+                mode: SetupMode.Create,
+                configure: c =>
+                {
+                    c.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswerTestCase15);
+                    c.Speaker = speakerKanerah2;
+                    c.TurnSpeaker = true;
+                    c.Continue = DialogueHelpers.CueSelectionHelper.Default();
+                }
+            );
 
             // create check test 1
             // this replaces a nextcue, so it has a parentasset of answer. but you never actually "see" it, it just sends you to either successcue or failcue depending if you pass or fail the check
@@ -254,7 +324,7 @@ namespace enhancedKanerahRomance.modContent
                     // a.OnSelect = ActionListHelpers.ActionListHelper.Default();
                     // a.AlignmentShift = DialogueHelpers.AlignmentShiftHelper.Default();
                     a.AlignmentShift = lawfulShiftExample;
-                    a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.aLWantToTalkToYouAboutWhatItMeansToBeATiefling);
+                    a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.answersListWhatItMeansToBeATiefling);
                     // a.AlignmentRequirement = AlignmentComponent.None;
                 }
             );
@@ -375,8 +445,8 @@ namespace enhancedKanerahRomance.modContent
                     a.NextCue = DialogueHelpers.CueSelectionHelper.Create(
                     new[] { AssetIds.newCueTestCase2 }
                     );
-                    a.ShowConditions = ConditionsCheckerBlueprintSegmentBuilder.WrapAndOrCombineConditionsCheckers(
-                    ConditionsCheckerHelpers.FlagUnlocked(AssetIds.newTestUnlockedFlag));
+                    a.ShowConditions = ConditionsCheckerBlueprintSegmentBuilder.WrapAndOrCombineANDConditionsCheckers(
+                    ConditionsCheckerHelpers.ConditionFlagUnlocked(AssetIds.newTestUnlockedFlag));
                     a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase1);
                 }
             );
@@ -408,7 +478,7 @@ namespace enhancedKanerahRomance.modContent
                     a.NextCue = DialogueHelpers.CueSelectionHelper.Create(
                     new[] { AssetIds.newCueTestCase2 }
                     );
-                    a.ShowConditions = ConditionsCheckerHelpers.FlagValue(
+                    a.ShowConditions = ConditionsCheckerHelpers.ConditionFlagValue(
                         flagGuid: AssetIds.newTestCounterFlag,
                         value: 2,
                         comparison: ">="
@@ -436,6 +506,87 @@ namespace enhancedKanerahRomance.modContent
                 }
             );
 
+            // create answer 12
+            var newAnswerTestCase12 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
+                name: "newAnswerTestCase12", // name
+                text: "NEW TEST ANSWER TEST CASE 12. TELEPORT TO KANERAH'S PLACE", // text
+                assetId: AssetIds.newAnswerTestCase12,
+                mode: SetupMode.Create,
+                configure: a =>
+                {
+                    a.NextCue = DialogueHelpers.CueSelectionHelper.Default();
+                    // maybe it can be empty if we're teleporting???
+                    a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase2);
+                    a.OnSelect = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(
+                        
+                        ActionListHelpers.TeleportPartyThenProcActionList(
+                            AssetIds.areaEnterPointKanerahRoom,
+
+                                ActionListHelpers.TranslocateUnitIncludeDetached(
+                                AssetIds.unitKanerah,
+                                AssetIds.locatorKanerahRoom),
+
+                                ActionListHelpers.StartDialogIncludeDetached(
+                                AssetIds.newDialogForActivateTriggerTestCase2,
+                                AssetIds.unitKanerah),
+
+                                // we were having problems w dialog trigger happening before teleport and screwing stuff up
+                                // but this reordering fixed, I guess we kill the cutscene last
+                                ActionListHelpers.StopCutscene(AssetIds.cutsceneGenericRomanceEvent)
+
+                                )
+                                );
+
+                }
+            );
+
+            // create answer 13
+            var newAnswerTestCase13 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
+                name: "newAnswerTestCase13", // name
+                text: "NEW TEST ANSWER TEST CASE 13. Exit dialogue", // text
+                assetId: AssetIds.newAnswerTestCase13,
+                mode: SetupMode.Create,
+                configure: a =>
+                {
+                    a.NextCue = DialogueHelpers.CueSelectionHelper.Create(
+                    new[] { AssetIds.newCueTestCase11 }
+                    ); // THIS INPUT IS ALWAYS NEEDED FOR ANSWER CREATION (but not modification)
+                    a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase2);
+                }
+            );
+
+            // create answer 14
+            var newAnswerTestCase14 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
+                name: "newAnswerTestCase14", // name
+                text: "NEW TEST ANSWER TEST CASE 14. proc sex", // text
+                assetId: AssetIds.newAnswerTestCase14,
+                mode: SetupMode.Create,
+                configure: a =>
+                {
+                a.NextCue = DialogueHelpers.CueSelectionHelper.Default();
+                // maybe it can be empty if we're using an actionslist
+                a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase3);
+                a.OnSelect = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(
+                    PlayCutscene(AssetIds.cutsceneKanerahSex)
+                    );
+                }
+            );
+
+            // create answer 15
+            var newAnswerTestCase15 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
+                name: "newAnswerTestCase15", // name
+                text: "NEW TEST ANSWER TEST CASE 15. Exit dialogue", // text
+                assetId: AssetIds.newAnswerTestCase15,
+                mode: SetupMode.Create,
+                configure: a =>
+                {
+                    a.NextCue = DialogueHelpers.CueSelectionHelper.Create(
+                    new[] { AssetIds.newCueTestCase13 }
+                    ); // THIS INPUT IS ALWAYS NEEDED FOR ANSWER CREATION (but not modification)
+                    a.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newAnswersListTestCase3);
+                }
+            );
+
 
             // create AnswersList
             var newAnswersListTestBasic = DialogueBlueprintBuilder.CreateOrModifyAnswersList(
@@ -458,12 +609,38 @@ namespace enhancedKanerahRomance.modContent
                 }
             );
 
+            // create AnswersList 2
+            var newAnswersListTestCase2 = DialogueBlueprintBuilder.CreateOrModifyAnswersList(
+                name: "newAnswersListTestCase2",
+                assetId: AssetIds.newAnswersListTestCase2,
+                mode: SetupMode.Create,
+                configure: al =>
+                {
+                    al.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newCueTestCase9);
+                    al.Answers.Add(newAnswerTestCase12);
+                    al.Answers.Add(newAnswerTestCase13);
+                }
+            );
+
+            // create AnswersList 3
+            var newAnswersListTestCase3 = DialogueBlueprintBuilder.CreateOrModifyAnswersList(
+                name: "newAnswersListTestCase3",
+                assetId: AssetIds.newAnswersListTestCase3,
+                mode: SetupMode.Create,
+                configure: al =>
+                {
+                    al.ParentAsset = DialogueHelpers.ParentAssetHelper(AssetIds.newCueTestCase12);
+                    al.Answers.Add(newAnswerTestCase14);
+                    al.Answers.Add(newAnswerTestCase15);
+                }
+            );
+
 
             // modify cue 1
             var modifyCueTestCase1 = DialogueBlueprintBuilder.CreateOrModifyCue(
                 name: "modifyCueTestCase1",
                 text: "MODIFY CUE - TEST CASE 1. Formerly response to \"want you to leave my lands\"",
-                assetId: AssetIds.modifyWantYouToLeaveMyLandsCue,
+                assetId: AssetIds.cueWantYouToLeaveMyLands,
                 mode: SetupMode.Modify,
                 configure: c =>
                 {
@@ -475,7 +652,7 @@ namespace enhancedKanerahRomance.modContent
             var modifyAnswerTestCase1 = DialogueBlueprintBuilder.CreateOrModifyAnswer(
                 name: "modifyAnswerTestCase1",
                 text: "MODIFY ANSWER TEST CASE 1 - formerly \"noMoreIntimateEncounters\" - now requires lawful",
-                assetId: AssetIds.modifyNoMoreIntimate,
+                assetId: AssetIds.answerNoMoreIntimate,
                 mode: SetupMode.Modify,
                 configure: a =>
                 {
@@ -486,7 +663,7 @@ namespace enhancedKanerahRomance.modContent
             // modify AnswersList
             var modifyAnswersListTestBasic = DialogueBlueprintBuilder.CreateOrModifyAnswersList(
                 name: "modifyAnswersListTestBasic",
-                assetId: AssetIds.aLWantToTalkToYouAboutWhatItMeansToBeATiefling,
+                assetId: AssetIds.answersListWhatItMeansToBeATiefling,
                 mode: SetupMode.Modify,
                 configure: al =>
                 {
@@ -511,15 +688,31 @@ namespace enhancedKanerahRomance.modContent
                 }
             );
 
-            // create a new dialog, that we will use to test blueprintarea triggers
-            var newDialogForBlueprintAreaTestCase1 = DialogueBlueprintBuilder.CreateOrModifyDialog(
-                name: "newDialogForBlueprintAreaTestCase1",
-                assetId: AssetIds.newDialogForBlueprintAreaTestCase1,
+            // create a new dialog, that we will use to test activatetrigger
+            var newDialogForActivateTriggerTestCase1 = DialogueBlueprintBuilder.CreateOrModifyDialog(
+                name: "newDialogForActivateTriggerTestCase1",
+                assetId: AssetIds.newDialogForActivateTriggerTestCase1,
                 mode: SetupMode.Create,
                 configure: dialog =>
                 {
                     dialog.FirstCue = DialogueHelpers.CueSelectionHelper.Create(
                     new[] { AssetIds.newCueTestCase9 }
+                    );
+                    dialog.StartActions = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(
+                        ActionListHelpers.PlayRomanceMusic()
+                        );
+                }
+            );
+
+            // create a new dialog, that we will use to test activatetrigger 2 (kanerah's room)
+            var newDialogForActivateTriggerTestCase2 = DialogueBlueprintBuilder.CreateOrModifyDialog(
+                name: "newDialogForActivateTriggerTestCase2",
+                assetId: AssetIds.newDialogForActivateTriggerTestCase2,
+                mode: SetupMode.Create,
+                configure: dialog =>
+                {
+                    dialog.FirstCue = DialogueHelpers.CueSelectionHelper.Create(
+                    new[] { AssetIds.newCueTestCase12 }
                     );
                     dialog.StartActions = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(
                         ActionListHelpers.PlayRomanceMusic()

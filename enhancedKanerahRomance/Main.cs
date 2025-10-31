@@ -65,9 +65,7 @@ namespace enhancedKanerahRomance
                 }
                 catch (Exception e)
                 {
-                    Log.Log(
-                        
-                        "Main, HarmonyPatch, ERROR: {e}");
+                    Main.Log.Log($"Main, HarmonyPatch, ERROR: {e}");
                 }
             }
         }

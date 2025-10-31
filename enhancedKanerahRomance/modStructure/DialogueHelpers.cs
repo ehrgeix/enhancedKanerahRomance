@@ -22,6 +22,7 @@ namespace enhancedKanerahRomance.modStructure
     internal class DialogueHelpers
     {
         // builder: SpeakerHelper
+        // I think the switchDual here is used to make sure the correct tiefling is speaking
         public static class SpeakerHelper
         {
             public static DialogSpeaker Default()

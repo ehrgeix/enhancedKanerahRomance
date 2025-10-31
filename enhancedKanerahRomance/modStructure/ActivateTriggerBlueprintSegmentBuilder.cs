@@ -33,7 +33,7 @@ namespace enhancedKanerahRomance.modStructure
     {
         public static ActivateTrigger CreateActivateTrigger(
             string areaAssetId, // asset id of the AREA
-            string name, // name of THIS ACTIVATETRIGGER
+            string activateTriggerName, // name of THIS ACTIVATETRIGGER
             Action<ActivateTrigger> configure)
         {
             var area = ResourcesLibrary.TryGetBlueprint<BlueprintScriptableObject>(areaAssetId); // weaker "typing" (???) because we want to target blueprints.area.blueprintarea OR blueprints.componentlist
@@ -46,7 +46,7 @@ namespace enhancedKanerahRomance.modStructure
             ActivateTrigger trigger;
             {
                 trigger = UnityEngine.ScriptableObject.CreateInstance<ActivateTrigger>();
-                trigger.name = name;
+                trigger.name = activateTriggerName;
                 trigger.Conditions = ConditionsCheckerHelpers.Default(); // Builder
                 trigger.Actions = ActionListHelpers.Default(); // Builder
                 trigger.m_Once = true; // default once only

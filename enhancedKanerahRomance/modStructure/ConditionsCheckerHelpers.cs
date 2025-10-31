@@ -36,7 +36,7 @@ namespace enhancedKanerahRomance.modStructure
         }
 
         // TODO, FlagUnlocked - IMPROVE
-        public static Condition FlagUnlocked(string flagGuid)
+        public static Condition ConditionFlagUnlocked(string flagGuid)
         {
             var flag = ResourcesLibrary.TryGetBlueprint<BlueprintUnlockableFlag>(flagGuid);
             if (flag == null)
@@ -53,7 +53,7 @@ namespace enhancedKanerahRomance.modStructure
         }
 
         // FlagValue? TODO check this
-        public static ConditionsChecker FlagValue(string flagGuid, int value, string comparison = "==")
+        public static ConditionsChecker ConditionFlagValue(string flagGuid, int value, string comparison = "==")
         {
             var flag = ResourcesLibrary.TryGetBlueprint<BlueprintUnlockableFlag>(flagGuid);
             if (flag == null)
@@ -98,7 +98,7 @@ namespace enhancedKanerahRomance.modStructure
         }
 
         // companion in party
-        public static Condition CompanionInParty(string companionGuid)
+        public static Condition ConditionCompanionInParty(string companionGuid)
         {
             var companion = ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(companionGuid);
             if (companion == null)
@@ -111,6 +111,26 @@ namespace enhancedKanerahRomance.modStructure
             condition.MatchWhenActive = true;
             condition.MatchWhenDetached = false;
             condition.MatchWhenRemote = false;
+            condition.MatchWhenDead = false;
+            condition.MatchWhenEx = false;
+            condition.Not = false;
+
+            return condition;
+        }
+
+        public static Condition ConditionCompanionInPartyMatchWhenDetached(string companionGuid)
+        {
+            var companion = ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(companionGuid);
+            if (companion == null)
+            {
+                Main.Log.Log("ConditionsCheckerHelpers, CompanionInParty, ERROR: companion not found");
+            }
+
+            var condition = ScriptableObject.CreateInstance<Kingmaker.Designers.EventConditionActionSystem.Conditions.CompanionInParty>();
+            condition.companion = companion;
+            condition.MatchWhenActive = true;
+            condition.MatchWhenDetached = true;
+            condition.MatchWhenRemote = true;
             condition.MatchWhenDead = false;
             condition.MatchWhenEx = false;
             condition.Not = false;

@@ -64,70 +64,34 @@ namespace enhancedKanerahRomance.modStructure
             };
         }
 
-        /*
-        // depreciated (???) builder -- handles ACTIONS 
-        public static GameAction[] CreateOrModifyActions(
-            GameAction[] targetActions,
-            SetupMode mode,
-            Action<List<GameAction>> configure
-        )
+        // true or false conditions checker for actionlists
+        // probably mostly going to be used for stone or village capital
+        // I expected this to be an OR but owlcat seem to handle it this way (and, iftrue/iffalse branches)
+        public static GameAction TrueFalseCheckInsideActionList(
+                    ConditionsChecker trueorfalse,
+                    GameAction[] trueActions,
+                    GameAction[] falseActions,
+                    string comment = "shows up in json only, for readability")
         {
-            // take an array of actions and turn it into a list. we can modify lists more easily than arrays
-            var actions = targetActions?.ToList() ?? new List<GameAction>();
-
-            // the only difference w create/modify is w create we clear the list first, then configure it. modify we configure an existing list
-            if (mode == SetupMode.Create)
+            var conditions = ScriptableObject.CreateInstance<Conditional>();
+            conditions.Comment = comment;
+            conditions.ConditionsChecker = trueorfalse ?? new ConditionsChecker
             {
-                actions.Clear();
-            }
-            configure?.Invoke(actions);
+                Operation = Operation.And,
+                Conditions = Array.Empty<Condition>()
+            };
 
-            // this converts the list back to an array, NOT a full actionsList, and returns it
-            return actions.ToArray();
-        }
-
-        // secondary builder/wrapper - calls CreateOrModifyActions, handles actionLISTS
-        // also depreciated???
-        public static ActionList CreateOrModifyActionList(
-            ActionList targetList,
-            SetupMode mode,
-            Action<List<GameAction>> configure
-        )
-        {
-            // get existing actions from the actionList we're working on
-            // if it's null, get an empty array instead
-            var existingActions = targetList?.Actions ?? Array.Empty<GameAction>();
-
-            // pass it to CreateOrModifyActions to make changes if we need
-            var modifiedActions = CreateOrModifyActions(existingActions, mode, configure);
-
-            // if the list we're working with (targetList) is null, make a new list
-            var workingList = targetList ?? new ActionList();
-
-            // replace the actions array in the ActionList with the version we modified
-            workingList.Actions = modifiedActions;
-
-            return workingList;
-        }
-
-        // example old use case for this stuff, from camping encounters, before we refactored this into a helper
-        // and basically if we're ever writing stuff like this why not write a helper???
-
-        
-        // start dialogue
-        campingencounter.EncounterActions = ActionListBlueprintSegmentBuilder.CreateOrModifyActionList(
-            campingencounter.EncounterActions,
-            SetupMode.Create,
-            actions =>
+            conditions.IfTrue = new ActionList
             {
-            actions.Add(ActionListHelpers.StartDialog(
-            companionName: "CompanionInParty",
-            companionGuid: AssetIds.kanerahCompanion,
-            dialogName: "StartDialog",
-            dialogGuid: AssetIds.newDialogForCampingEncounterTestCase1));
-            }
-            );
-            */
+                Actions = trueActions ?? Array.Empty<GameAction>()
+            };
+            conditions.IfFalse = new ActionList
+            {
+                Actions = falseActions ?? Array.Empty<GameAction>()
+            };
+
+            return conditions;
+        }
     }
 
 }

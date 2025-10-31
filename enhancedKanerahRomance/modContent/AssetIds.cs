@@ -8,20 +8,35 @@ namespace enhancedKanerahRomance.modContent
 {
     public static class AssetIds
     {
-        // Asset IDs must begin with new for duplicate checking to work
-        // New asset IDs
+        // assetIds must begin with new for duplicate checking to work
 
-        // Existing asset IDs
-        public const string modifyWantYouToLeaveMyLandsCue = "5affbca409d60e34a8af9ad9ef4b0e11";
-        public const string modifyNoMoreIntimate = "695d2f0b36c8a2446aba22c09f1e5dbb";
-        public const string kanerahPortrait = "f1c0b181a534f4940ae17f243a5968ec";
-        public const string aLWantToTalkToYouAboutWhatItMeansToBeATiefling = "32e8b78bc87dc944bb43612e97419b3f";
-        public const string twinsBlueprintDialog = "cc84ee93d2f328c48a7747e7e8e8a234";
-        public const string kanerahCompanion = "f1c0b181a534f4940ae17f243a5968ec";
-        public const string capitalTavern_Indoor = "5c3935c8ab777f04f83f272425b750f9";
-        public const string CapitalSquareAreaMechanics = "90b7e95ae946cc542bc94c75d931ee22";
+        // existing assetIds
+        // START the assetId with the type of thing it is e.g., cue, cutscene, etc
 
-        // Test case asset IDs
+        // companions and related bits
+        public const string unitKanerah = "f1c0b181a534f4940ae17f243a5968ec";
+        public const string unitKalikke = "c807d18a89f96c74f8bb48b31b616323";
+
+        // dialog, cues, answers, answersLists etc
+        public const string cueWantYouToLeaveMyLands = "5affbca409d60e34a8af9ad9ef4b0e11";
+        public const string answerNoMoreIntimate = "695d2f0b36c8a2446aba22c09f1e5dbb";
+        public const string answersListWhatItMeansToBeATiefling = "32e8b78bc87dc944bb43612e97419b3f";
+        public const string dialogTwinsCompanion = "cc84ee93d2f328c48a7747e7e8e8a234";
+        
+        // areas and related bits
+        public const string areaCapitalTavern_Indoor = "5c3935c8ab777f04f83f272425b750f9";
+        public const string componentListCapitalSquareAreaMechanics = "90b7e95ae946cc542bc94c75d931ee22";
+        public const string areaEnterPointKanerahRoom = "e22132a384c243e4eb1223f8623a777f";
+        public const string locatorKanerahRoom = "f31018ae-91fd-4088-85b8-c003da63e4f1";
+
+        // flags
+        public const string flagStoneCapital = "1795eee9e31c4414dbedb67bd700ee97";
+
+        // cutscenes
+        public const string cutsceneGenericRomanceEvent = "a2c8aacd03bba4e41b4c6ccac15bee8b";
+        public const string cutsceneKanerahSex = "5004819ce74793e41a92a7ab700021f4";
+
+        // testcase assetIds
         public const string newTestCounterFlag = "11cdd5ef5beb4891b51ba9fd97f338a4";
         public const string newTestUnlockedFlag = "7447b84aaa444485859eb17f6b41c560";
         public const string newTestUnlockedFlag2 = "294cb068d11e4080a6939530077f28ff";
@@ -35,6 +50,10 @@ namespace enhancedKanerahRomance.modContent
         public const string newCueTestCase7Fail = "242b48fc5fd54459a5872860b13fc2b8";
         public const string newCueTestCase8 = "8e1a29658b3049ffb4e132585d9793b3";
         public const string newCueTestCase9 = "27314db8320147a5ad7e5291a22cd30e";
+        public const string newCueTestCase10 = "69f122c03e864d6489245c6cb2955145";
+        public const string newCueTestCase11 = "32d9e28b7f834928bfdd8da20214f3b4";
+        public const string newCueTestCase12 = "bef7c1e37aeb4648aa3998f3370dc4d1";
+        public const string newCueTestCase13 = "2febfc371ea344d19408908825946329";
 
         public const string newCheckTestCase1 = "268ce569ebca4f9cae34af309475c73c";
 
@@ -49,18 +68,23 @@ namespace enhancedKanerahRomance.modContent
         public const string newAnswerTestCase9 = "7318c05d131f46369c21fe10266fd307";
         public const string newAnswerTestCase10 = "16b6a64091854f8098695c8e79e07fc7";
         public const string newAnswerTestCase11 = "830a29c9efb847bf88fc65161c1e1bfb";
+        public const string newAnswerTestCase12 = "c453bd8a97f246e89214041f7a59679c";
+        public const string newAnswerTestCase13 = "de3430361dca41bba4541704b4cab734";
+        public const string newAnswerTestCase14 = "4fd98914d98e4da3bdb9b385b0b4109e";
+        public const string newAnswerTestCase15 = "8b372093b33e4063bc3fc4b63ed0a20f";
 
         public const string newAnswersListTestCase1 = "d10dbd690b3f45b696f35731bf58554b";
+        public const string newAnswersListTestCase2 = "19d967a222754ecc8877b7fca0fafe56";
+        public const string newAnswersListTestCase3 = "2ba9a1a86a244cf5bd422b575e311aeb";
 
         public const string newLawfulShiftTestCase = "061cb70dcfac4c97876ae894c2f6d013";
 
-        public const string newDialogForCampingEncounterTestCase1 = "973bcaa1246f4ef28f42b1433eb771a7";
         public const string newCampingEncounterTestCase1 = "5b9c2cfce9e14aeba0a278675a606985";
 
-        public const string newDialogForBlueprintAreaTestCase1 = "9dbd6c86a8f64310a2a41c91faf7f57b";
+        public const string newDialogForCampingEncounterTestCase1 = "973bcaa1246f4ef28f42b1433eb771a7";
+        public const string newDialogForActivateTriggerTestCase1 = "9dbd6c86a8f64310a2a41c91faf7f57b";
+        public const string newDialogForActivateTriggerTestCase2 = "8de847d3e37f4d43a90a89214ad686af";
 
-
-        // Test case asset IDs - ActionList
         public const string newBarkString1 = "467cd1afe7424922b0b6376117cee743";
         public const string newBarkString2 = "79ce97a33967407095fbc854cd2f83a4";
     }

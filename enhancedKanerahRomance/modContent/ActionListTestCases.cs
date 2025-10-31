@@ -44,7 +44,7 @@ namespace enhancedKanerahRomance.modContent
 );
 
             // load the dialog blueprint featuring Kanerah's bark
-            var blueprintDialogTarget = ResourcesLibrary.TryGetBlueprint<BlueprintDialog>(AssetIds.twinsBlueprintDialog);
+            var blueprintDialogTarget = ResourcesLibrary.TryGetBlueprint<BlueprintDialog>(AssetIds.dialogTwinsCompanion);
 
             // find the randomaction we're replacing inside the relevant subsection of this blueprint
             var randomAction = ActionListHelpers.FindFirstActionOfType<RandomAction>(blueprintDialogTarget.ReplaceActions);
@@ -61,7 +61,7 @@ namespace enhancedKanerahRomance.modContent
                     WhatToBark = barkString,
                     TargetUnit = new CompanionInParty
                     {
-                        companion = ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(AssetIds.kanerahCompanion),
+                        companion = ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(AssetIds.unitKanerah),
                         IncludeRemote = true,
                         IncludeExCompanions = false,
                         IncludeDettached = true
@@ -77,15 +77,15 @@ namespace enhancedKanerahRomance.modContent
                     WhatToBark = barkString2,
                     TargetUnit = new CompanionInParty
                     {
-                        companion = ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(AssetIds.kanerahCompanion),
+                        companion = ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(AssetIds.unitKanerah),
                         IncludeRemote = true,
                         IncludeExCompanions = false,
                         IncludeDettached = true
                     }
                 },
                 // only show if flag from testcase 7 set
-                conditions: ConditionsCheckerBlueprintSegmentBuilder.WrapAndOrCombineConditionsCheckers(
-                    ConditionsCheckerHelpers.FlagUnlocked(AssetIds.newTestUnlockedFlag)
+                conditions: ConditionsCheckerBlueprintSegmentBuilder.WrapAndOrCombineANDConditionsCheckers(
+                    ConditionsCheckerHelpers.ConditionFlagUnlocked(AssetIds.newTestUnlockedFlag)
                     )
             );
 
@@ -96,6 +96,10 @@ namespace enhancedKanerahRomance.modContent
             randomAction.Actions = existingActions.ToArray();
 
             Main.Log.Log("ActionListTestCases, AddActionListTestCases, KanerahBark edit complete");
+
+            // END KANERAH BARK TEST CASE
+
+
 
         }
     }

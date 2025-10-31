@@ -1,4 +1,5 @@
 ﻿using enhancedKanerahRomance.modStructure;
+using Kingmaker.AreaLogic.Cutscenes;
 using Kingmaker.AreaLogic.Cutscenes.Commands;
 using Kingmaker.Blueprints;
 using Kingmaker.Designers.EventConditionActionSystem.Actions;
@@ -13,13 +14,14 @@ using static enhancedKanerahRomance.modContent.AssetIds;
 using static enhancedKanerahRomance.modStructure.ActionListBlueprintSegmentBuilder;
 using static enhancedKanerahRomance.modStructure.ActionListHelpers;
 using static enhancedKanerahRomance.modStructure.CampingEncounterBlueprintBuilder;
-using static enhancedKanerahRomance.modStructure.ConditionsCheckerHelpers;
 using static enhancedKanerahRomance.modStructure.ConditionsCheckerBlueprintSegmentBuilder;
+using static enhancedKanerahRomance.modStructure.ConditionsCheckerHelpers;
 using static enhancedKanerahRomance.modStructure.DialogueBlueprintBuilder;
 using static enhancedKanerahRomance.modStructure.DialogueHelpers;
 using static enhancedKanerahRomance.modStructure.Globals;
 using static enhancedKanerahRomance.modStructure.MiscBlueprintBuilder;
 using static enhancedKanerahRomance.modStructure.MiscLocalizationAndRegistration;
+using Kingmaker.Designers.EventConditionActionSystem.Evaluators;
 
 namespace enhancedKanerahRomance.modContent
 {
@@ -28,24 +30,57 @@ namespace enhancedKanerahRomance.modContent
         public static void AddActivateTriggerTestCases()
         {
             var newActivateTriggerTestCase1 = ActivateTriggerBlueprintSegmentBuilder.CreateActivateTrigger(
-                name: "newActivateTriggerTestCase1",
-                areaAssetId: AssetIds.CapitalSquareAreaMechanics,
+                activateTriggerName: "newActivateTriggerTestCase1",
+                areaAssetId: AssetIds.componentListCapitalSquareAreaMechanics,
                 configure: trigger =>
                 {
                     trigger.m_AlsoOnAreaLoad = true;
-                    trigger.m_Once = true; 
+                    trigger.m_Once = true;
 
-                    trigger.Conditions = ConditionsCheckerBlueprintSegmentBuilder.WrapAndOrCombineConditionsCheckers(
-                        ConditionsCheckerHelpers.FlagUnlocked(AssetIds.newTestUnlockedFlag2)
-                        // add a condition to check kanerah around, TODO
-                        // add translocate stuff
+                    // START conditions
+                    trigger.Conditions = ConditionsCheckerBlueprintSegmentBuilder.WrapAndOrCombineANDConditionsCheckers(
+                        ConditionsCheckerHelpers.ConditionFlagUnlocked(AssetIds.newTestUnlockedFlag2),
+                        ConditionsCheckerHelpers.ConditionCompanionInPartyMatchWhenDetached(AssetIds.unitKanerah)
                         );
 
-                    trigger.Actions = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(
+                    // actionlist set up to run cutscene
+                    // as far as I can tell this doesn't need a stone/village check
+                    trigger.Actions = WrapAndOrCombineActionsIntoActionList(
+                        PlayGenericRomanceCutscene(
+                            AssetIds.unitKanerah,
+                            AssetIds.newDialogForActivateTriggerTestCase1)
+                        );
+
+
+                    // DO NOT delete the below, it completely works EXCEPT there's no appropriate translocateunit on enter capital
+                    // we might need stone vs village logic later
+                    // it replaces everything after START conditions in the block above
+
+                    /* This is a test chat when you return to capital. the problem is that it doesn't teleport the companion to you so dialog is across map.
+                    // check if capital is stone or village
+                    var capitalStone = ConditionsCheckerBlueprintSegmentBuilder.WrapAndOrCombineANDConditionsCheckers(
+                        ConditionsCheckerHelpers.FlagUnlocked(AssetIds.flagStoneCapital)
+                        );
+
+
+                    var actionList = ActionListBlueprintSegmentBuilder.TrueFalseCheckInsideActionList(
+                        trueorfalse: capitalStone,
+
+                        trueActions: new GameAction[] {
+                        // TranslocateUnitIncludeDetached
                         StartDialogIncludeDetached(AssetIds.newDialogForBlueprintAreaTestCase1, AssetIds.kanerahCompanion)
-                        // remove trigger somehow? after fired, might need to remove it from pool - think m_Once handles this, TODO confirm
-                        );
+                        },
 
+                        falseActions: new GameAction[] {
+                        // TranslocateUnitIncludeDetached
+                        StartDialogIncludeDetached(AssetIds.newDialogForBlueprintAreaTestCase1, AssetIds.kanerahCompanion)
+                        },
+                        comment: "Village or Stone Capital check as per OC"
+                    );
+
+                    // actually move this stuff into the actionList
+                    trigger.Actions = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(actionList);
+                    */
                 }
                 );
         }
