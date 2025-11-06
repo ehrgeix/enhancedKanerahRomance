@@ -82,7 +82,13 @@ namespace enhancedKanerahRomance.modStructure
 
             var increment = ScriptableObject.CreateInstance<IncrementFlagValue>();
             increment.Flag = flag;
-            increment.Value = new IntConstant { Value = amount, name = $"$IntConstant_{flagGuid}" };
+
+            var intconstant = ScriptableObject.CreateInstance<IntConstant>();
+            intconstant.Value = amount;
+            intconstant.name = $"$IntConstant_{flagGuid}";
+            increment.Value = intconstant;
+
+            //increment.Value = new IntConstant { Value = amount, name = $"$IntConstant_{flagGuid}" };
 
             return increment;
         }

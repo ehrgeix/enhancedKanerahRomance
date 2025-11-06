@@ -20,6 +20,8 @@ using static enhancedKanerahRomance.modContent.AssetIds;
 
 namespace enhancedKanerahRomance.modStructure
 {
+    // these helpers are basically going to be misc. cutscenes we use
+    // e.g., fade to black... and uh... well. we'll see
     internal class CutsceneHelpers
     {
 

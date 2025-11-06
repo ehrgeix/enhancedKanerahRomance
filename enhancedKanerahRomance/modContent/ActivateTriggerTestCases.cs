@@ -44,46 +44,12 @@ namespace enhancedKanerahRomance.modContent
                         );
 
                     // actionlist set up to run cutscene
-                    // TODO -- add stone/village check later in this chain of events
-                    // + fix fog of war, I think oc have a cutscene for this
+                    // most of the heavy listing for this is actually done in a later dialog. so it goes...
                     trigger.Actions = WrapAndOrCombineActionsIntoActionList(
                         PlayGenericRomanceCutscene(
                             AssetIds.unitKanerah,
                             AssetIds.newDialogForActivateTriggerTestCase1)
                         );
-
-
-
-                    // ATTEMPT ONE:
-                    // DO NOT delete the below, it completely works EXCEPT there's no appropriate translocateunit on enter capital
-                    // we might need stone vs village logic later
-                    // it replaces everything after START conditions in the block above
-
-                    /* This is a test chat when you return to capital. the problem is that it doesn't teleport the companion to you so dialog is across map.
-                    // check if capital is stone or village
-                    var capitalStone = ConditionsCheckerBlueprintSegmentBuilder.WrapAndOrCombineANDConditionsCheckers(
-                        ConditionsCheckerHelpers.FlagUnlocked(AssetIds.flagStoneCapital)
-                        );
-
-
-                    var actionList = ActionListBlueprintSegmentBuilder.TrueFalseCheckInsideActionList(
-                        trueorfalse: capitalStone,
-
-                        trueActions: new GameAction[] {
-                        // TranslocateUnitIncludeDetached
-                        StartDialogIncludeDetached(AssetIds.newDialogForBlueprintAreaTestCase1, AssetIds.kanerahCompanion)
-                        },
-
-                        falseActions: new GameAction[] {
-                        // TranslocateUnitIncludeDetached
-                        StartDialogIncludeDetached(AssetIds.newDialogForBlueprintAreaTestCase1, AssetIds.kanerahCompanion)
-                        },
-                        comment: "Village or Stone Capital check as per OC"
-                    );
-
-                    // actually move this stuff into the actionList
-                    trigger.Actions = ActionListBlueprintSegmentBuilder.WrapAndOrCombineActionsIntoActionList(actionList);
-                    */
                 }
                 );
         }

@@ -36,13 +36,14 @@ namespace enhancedKanerahRomance.modContent
         // cutscenes
         public const string cutsceneGenericRomanceEvent = "a2c8aacd03bba4e41b4c6ccac15bee8b";
         public const string cutsceneKanerahSex = "5004819ce74793e41a92a7ab700021f4";
-        // public const string cutsceneKanerahRoomFOWRemover = "331686c28d4aa1e43a7e1a19bbd4fd98"; we don't use this I think
 
         // testcase assetIds
+        // flags
         public const string newTestCounterFlag = "11cdd5ef5beb4891b51ba9fd97f338a4";
         public const string newTestUnlockedFlag = "7447b84aaa444485859eb17f6b41c560";
         public const string newTestUnlockedFlag2 = "294cb068d11e4080a6939530077f28ff";
 
+        // dialogue
         public const string newCueTestCase1 = "e5b3de8f8e0640a4a632c219c44b20d2";
         public const string newCueTestCase2 = "ff42c96b0e07428fb87ce9f2e4f4942a";
         public const string newCueTestCase3 = "ba8ad39943774f17a13c1ca9a8f2d45c";
@@ -79,17 +80,22 @@ namespace enhancedKanerahRomance.modContent
         public const string newAnswersListTestCase2 = "19d967a222754ecc8877b7fca0fafe56";
         public const string newAnswersListTestCase3 = "2ba9a1a86a244cf5bd422b575e311aeb";
 
+        // special dialogue
         public const string newLawfulShiftTestCase = "061cb70dcfac4c97876ae894c2f6d013";
-
-        public const string newCampingEncounterTestCase1 = "5b9c2cfce9e14aeba0a278675a606985";
-
-        public const string newDialogForCampingEncounterTestCase1 = "973bcaa1246f4ef28f42b1433eb771a7";
-        public const string newDialogForActivateTriggerTestCase1 = "9dbd6c86a8f64310a2a41c91faf7f57b";
-        public const string newDialogForActivateTriggerTestCase2 = "8de847d3e37f4d43a90a89214ad686af";
 
         public const string newBarkString1 = "467cd1afe7424922b0b6376117cee743";
         public const string newBarkString2 = "79ce97a33967407095fbc854cd2f83a4";
 
+
+        // camping encounters
+        public const string newCampingEncounterTestCase1 = "5b9c2cfce9e14aeba0a278675a606985";
+        public const string newDialogForCampingEncounterTestCase1 = "973bcaa1246f4ef28f42b1433eb771a7";
+
+        // activate triggers
+        public const string newDialogForActivateTriggerTestCase1 = "9dbd6c86a8f64310a2a41c91faf7f57b";
+        public const string newDialogForActivateTriggerTestCase2 = "8de847d3e37f4d43a90a89214ad686af";
+
+        // cutscenes
         public const string newCutsceneFadeIn1 = "449a523520d64825a872272bb4b0c1a6";
     }
 

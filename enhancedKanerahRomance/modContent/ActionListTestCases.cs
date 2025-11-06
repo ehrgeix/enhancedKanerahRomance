@@ -54,7 +54,7 @@ namespace enhancedKanerahRomance.modContent
                 return;
             }
 
-            // create target for barks
+            // create target for barks, maybe we could break this out into a helper? our companioninparty helpers atm are all startDialog focused
             var target = ScriptableObject.CreateInstance<CompanionInParty>();
             target.companion = ResourcesLibrary.TryGetBlueprint<BlueprintUnit>(AssetIds.unitKanerah);
             target.IncludeRemote = true;
